@@ -7,7 +7,7 @@ const Navbar = () => {
   const light = false;
   const loggedIn = false;
   return (
-    <div className="w-full h-20 border-b-1 text-white border-gray-300 flex justify-between items-center px-10">
+    <div className="w-full h-20 border-b-1  border-gray-300 flex justify-between items-center px-10">
       <div className="logo w-fit h-fit pl-2 font-extrabold  text-2xl">
         Service<span className="font-extralight font-serif">Hub</span>
       </div>
