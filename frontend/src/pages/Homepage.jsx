@@ -56,7 +56,7 @@ const Homepage = () => {
   //Professional Services Delivered with Precision and Care
   //What Do You Need Help With Today?
   return (
-    <div className="w-full h-full ">
+    <div className="w-full h-[80%]">
       <Navbar />
       <div className=" flex flex-col justify-center items-center min-h-[80%] w-screen px-4 text-center">
         <h1 className="text-[3rem] md:text-[4.5rem] font-bold leading-tight tracking-tighter flex flex-wrap items-center justify-center gap-3">
