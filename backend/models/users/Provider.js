@@ -40,7 +40,7 @@ const providerSchema = new mongoose.Schema(
       },
     },
     gender: {
-      type: Number,
+      type: String,
       enum: {
         values: ["male", "female", "others"],
         message: "{VALUE} not supported for gender",
@@ -59,6 +59,7 @@ const providerSchema = new mongoose.Schema(
     avgRating: {
       type: Number,
       maxlength: 1,
+      default: 3,
     },
     approval: {
       type: Boolean,
@@ -69,4 +70,14 @@ const providerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+providerSchema.methods.getProviderJWT = async function (role) {
+  const token = jwt.sign({ _id: this._id, role }, process.env.JWT_TOKEN, {
+    expiresIn: "1d",
+  });
+  return token;
+};
+providerSchema.methods.validateProviderPassword = async function (password) {
+  const isvalidPassword = await bcrypt.compare(password, this.password);
+  return isvalidPassword;
+};
 module.exports = mongoose.model("Provider", providerSchema);

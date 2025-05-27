@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     gender: {
-      type: Number,
+      type: String,
       enum: {
         values: ["male", "female", "others"],
         message: "{VALUE} not supported for gender",
@@ -44,4 +44,16 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+//schema methods
+userSchema.methods.getUserJWT = async function (role) {
+  const token = await jwt.sign({ _id: this._id, role }, process.env.JWT_TOKEN, {
+    expiresIn: "1d",
+  });
+  return token;
+};
+
+userSchema.methods.validateUserPassword = async function (password) {
+  const validPassword = await bcrypt.compare(password, this.password);
+  return validPassword;
+};
 module.exports = mongoose.model("User", userSchema);
