@@ -19,10 +19,6 @@ POST /api/admin/login → Login admin✅
 GET /api/admin/users → List all users✅
 GET /api/admin/providers → List all users✅
 
-POST /api/admin/category → Create service categories✅
-POST /api/admin/subcategory → Create service subcategories✅
-POST /api/admin/service → Create services✅
-
 GET /api/admin/bookings → View all bookings
 DELETE /api/admin/user/:id → Ban or delete user
 
@@ -38,13 +34,24 @@ PUT /api/providers/:id/update → Update provider profile/skills
 
 categories api
 
+POST /api/category → (Admin) Create service categories✅
+POST /api/subcategory → (Admin) Create service subcategories✅
+POST /api/service → (Admin) Create services✅
+
 GET /api/category → List all services (e.g., Cleaning, AC repair)✅
 GET /api/subcategory → List all services (e.g., Cleaning, AC repair)✅
 GET /api/service → List all services (e.g., Cleaning, AC repair)✅
 
+POST /api/toggle-category → (Admin) toggle the isActive to true/false & cascade that for all services and subcategory✅
+POST /api/toggle-subcategory → (Admin) toggle the isActive to true/false & cascade that for all services ✅
+
+PATCH /api/category → (Admin) update the name and image✅
+PATCH /api/subcategory → (Admin) update the name ✅
+PATCH /api/service → (Admin) update the details of services✅
+
 GET /api/services/:id → Get details of a specific service
 POST /api/services/ → (Admin) Create a new service
-PUT /api/services/:id → (Admin) Update a service
+
 DELETE /api/services/:id → (Admin) Delete a service
 
 ➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖

@@ -1,4 +1,5 @@
 const express = require("express");
+const validator = require("validator");
 const {
   authenticateJWT,
   authorizeRoles,
@@ -194,7 +195,7 @@ serviceRouter.patch(
 );
 
 serviceRouter.post(
-  "/delete-category",
+  "/toggle-category",
   authenticateJWT,
   authorizeRoles("admin"),
   async (req, res) => {
@@ -210,7 +211,7 @@ serviceRouter.post(
 );
 
 serviceRouter.post(
-  "/delete-subcategory",
+  "/toggle-subcategory",
   authenticateJWT,
   authorizeRoles("admin"),
   async (req, res) => {
@@ -221,6 +222,85 @@ serviceRouter.post(
       res.send("Category soft-deleted and cascade triggered.");
     } catch (err) {
       res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+serviceRouter.post(
+  "/category",
+  authenticateJWT,
+  authorizeRoles("admin"),
+  async (req, res) => {
+    try {
+      const { name, iconUrl } = req.body;
+
+      if (!validator.isURL(iconUrl)) {
+        throw new Error("Invalid Url ");
+      }
+
+      const category = new Category({
+        name,
+        iconUrl,
+      });
+      await category.save();
+      res.json({ message: "category added successfully" });
+    } catch (error) {
+      res.send("Error: " + error);
+    }
+  }
+);
+
+serviceRouter.post(
+  "/subcategory",
+  authenticateJWT,
+  authorizeRoles("admin"),
+  async (req, res) => {
+    try {
+      const { name, categoryId } = req.body;
+
+      const category = await Category.findById(categoryId);
+      if (!category) {
+        throw new Error("Category not valid");
+      }
+      const subcategory = new Subcategory({
+        name,
+        categoryId,
+      });
+      await subcategory.save();
+      res.json({ message: "subcategory added successfully" });
+    } catch (error) {
+      res.send("Error: " + error);
+    }
+  }
+);
+
+serviceRouter.post(
+  "/service",
+  authenticateJWT,
+  authorizeRoles("admin"),
+  async (req, res) => {
+    try {
+      const { name, subcategoryId, min_price, max_price, photo } = req.body;
+
+      if (!validator.isURL(photo)) {
+        throw new Error("Invalid Url ");
+      }
+
+      const subcategory = await Subcategory.findById(subcategoryId);
+      if (!subcategory) {
+        throw new Error("Subcategory not valid");
+      }
+      const service = new Service({
+        name,
+        subcategoryId,
+        min_price,
+        max_price,
+        photo,
+      });
+      await service.save();
+      res.json({ message: "service added successfully" });
+    } catch (error) {
+      res.send("Error: " + error);
     }
   }
 );
