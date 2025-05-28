@@ -1,12 +1,20 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import VisitorPage from "./pages/VisitorPage";
 import Homepage from "./pages/Homepage";
-import Page2 from "./pages/Page2";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const App = () => {
   return (
-    <div className="w-screen h-screen bg-white">
-      <Homepage />
-      <Page2 />
-    </div>
+    <BrowserRouter basename="/">
+      <Routes>
+        <Route path="/" element={<VisitorPage />}>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 

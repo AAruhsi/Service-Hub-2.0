@@ -4,11 +4,17 @@ const mongoose = require("mongoose");
 const { authRouter } = require("./routes/authRouter");
 const { adminRouter } = require("./routes/adminRouter");
 const { serviceRouter } = require("./routes/serviceRouter");
+const cors = require("cors");
 require("./listener/categoryListener");
 
 require("dotenv").config();
 const app = express();
-
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 const connectDB = async () => {
   await mongoose.connect(
     "mongodb+srv://goelaarushi2203:rahul12345@cluster0.ho1de81.mongodb.net/service_hub?retryWrites=true&w=majority"

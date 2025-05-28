@@ -50,14 +50,12 @@
 
 // export default Homepage;
 
-import React from "react";
-import Navbar from "../components/Navbar";
+import Page2 from "./Page2";
 const Homepage = () => {
   //Professional Services Delivered with Precision and Care
   //What Do You Need Help With Today?
   return (
-    <div className="w-full h-[80%]">
-      <Navbar />
+    <div className="w-screen h-screen bg-white">
       <div className=" flex flex-col justify-center items-center min-h-[80%] w-screen px-4 text-center">
         <h1 className="text-[3rem] md:text-[4.5rem] font-bold leading-tight tracking-tighter flex flex-wrap items-center justify-center gap-3">
           Choose Your
@@ -87,6 +85,7 @@ const Homepage = () => {
           </button>
         </div>
       </div>
+      <Page2 />
     </div>
   );
 };
