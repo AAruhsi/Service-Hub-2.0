@@ -1,8 +1,5 @@
 const express = require("express");
-<<<<<<< HEAD
 const validator = require("validator");
-=======
->>>>>>> ca10f7dda6ca8849fd90c9f7ec290885abecf806
 const {
   authenticateJWT,
   authorizeRoles,
@@ -198,11 +195,7 @@ serviceRouter.patch(
 );
 
 serviceRouter.post(
-<<<<<<< HEAD
   "/toggle-category",
-=======
-  "/delete-category",
->>>>>>> ca10f7dda6ca8849fd90c9f7ec290885abecf806
   authenticateJWT,
   authorizeRoles("admin"),
   async (req, res) => {
@@ -218,11 +211,7 @@ serviceRouter.post(
 );
 
 serviceRouter.post(
-<<<<<<< HEAD
   "/toggle-subcategory",
-=======
-  "/delete-subcategory",
->>>>>>> ca10f7dda6ca8849fd90c9f7ec290885abecf806
   authenticateJWT,
   authorizeRoles("admin"),
   async (req, res) => {
@@ -237,7 +226,6 @@ serviceRouter.post(
   }
 );
 
-<<<<<<< HEAD
 serviceRouter.post(
   "/category",
   authenticateJWT,
@@ -317,6 +305,4 @@ serviceRouter.post(
   }
 );
 
-=======
->>>>>>> ca10f7dda6ca8849fd90c9f7ec290885abecf806
 module.exports = { serviceRouter };
