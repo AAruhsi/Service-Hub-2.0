@@ -1,3 +1,23 @@
+# Create new backend from main (if needed)
+
+git checkout main
+git checkout -b backend
+
+# Always start here for backend work
+
+git checkout backend
+
+# Make changes...
+
+git add .
+git commit -m "Backend: added X feature"
+
+# After done, merge into main
+
+git checkout main
+git merge backend
+➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖
+
 authentication api
 
 POST /api/auth/signup/user → Customer signup ✅
