@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const { authRouter } = require("./routes/authRouter");
 const { adminRouter } = require("./routes/adminRouter");
 const { serviceRouter } = require("./routes/serviceRouter");
+require("./listener/categoryListener");
+
 require("dotenv").config();
 const app = express();
 
