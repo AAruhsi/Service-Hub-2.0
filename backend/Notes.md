@@ -34,6 +34,7 @@ PUT /api/providers/:id/update → Update provider profile/skills
 
 categories api
 
+<<<<<<< HEAD
 POST /api/category → (Admin) Create service categories✅
 POST /api/subcategory → (Admin) Create service subcategories✅
 POST /api/service → (Admin) Create services✅
