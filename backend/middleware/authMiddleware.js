@@ -5,7 +5,6 @@ const Admin = require("../models/users/Admin");
 // 1. JWT Authentication Middleware
 const authenticateJWT = async (req, res, next) => {
   try {
-    console.log(req.cookies);
     const { token } = req.cookies;
     if (!token) {
       throw new Error("Token not provided");
@@ -39,7 +38,7 @@ const authorizeRoles = (...allowedRoles) => {
       }
 
       req.userDoc = userDoc; // You can use this instead of calling DB again
-      console.log("validatePatch ", userDoc);
+
       next();
     } catch (error) {
       res.status(500).json({ error: "Authorization failed" });

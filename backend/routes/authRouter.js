@@ -10,6 +10,8 @@ const {
   authenticateJWT,
   authorizeRoles,
 } = require("../middleware/authMiddleware");
+const { validateProviderPassword } = require("../models/users/Provider");
+const { validateUserPassword } = require("../models/users/User");
 const { validatePatchRequest } = require("../middleware/validatePatchRequest");
 
 authRouter.post("/signup/user", validateUserSignup, async (req, res) => {
@@ -87,16 +89,19 @@ authRouter.post("/login", async (req, res) => {
     const Model = role === "provider" ? Provider : User;
     const user = await Model.findOne({ email });
     if (!user) {
-      throw new Error("User not found please register first");
+      res.status(400).json({ message: "User not found please register first" });
     }
     const validPassword =
       role === "provider"
-        ? user.validateProviderPassword(password)
-        : user.validateUserPassword(password);
+        ? await user.validateProviderPassword(password)
+        : await user.validateUserPassword(password);
+
     if (validPassword) {
       //create JWT token
       const token =
-        role === "provider" ? user.getProviderJWT(role) : user.getUserJWT(role);
+        role === "provider"
+          ? await user.getProviderJWT(role)
+          : await user.getUserJWT(role);
 
       res.cookie("token", token, {
         httpOnly: true,
@@ -104,7 +109,7 @@ authRouter.post("/login", async (req, res) => {
       });
       res.json({ message: "Login Successfull", data: user });
     } else {
-      res.send("password Invalid");
+      res.status(400).send({ message: "password Invalid" });
     }
   } catch (error) {
     res.status(400).send("Error" + error);
@@ -160,11 +165,11 @@ authRouter.patch(
         { $set: req.body },
         { new: true, runValidators: true }
       );
-      console.log("the is response for api", updatedUser);
+
       if (!res) {
         res.status(404).json({ message: "User not Found" });
       }
-      console.log("This is userDOc", req.userDoc);
+
       res.json({ message: "USer updated", data: updatedUser });
     } catch (error) {
       res.status(400).send(error);

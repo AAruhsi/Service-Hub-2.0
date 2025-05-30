@@ -11,35 +11,35 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { loading, setLoading, setLoggedIn, isLoggedIn, setUser } = useAuth();
+
+  const { setLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
-  const notify = (isLoggedIn) => {
-    isLoggedIn
-      ? toast.success("Login Successfull")
-      : toast.error("Login Failed");
-  };
+
   const onSubmit = async (data) => {
+    const { email, password, role } = data;
+
     try {
-      setLoading(true);
+      let endpoint = role === "admin" ? "/admin/login" : "/auth/login";
       const res = await axios.post(
-        BASE_URL + "/auth/login",
-        {
-          email: data.email,
-          password: data.password,
-          role: data.role,
-        },
+        BASE_URL + endpoint,
+        { email, password, role },
         { withCredentials: true }
       );
 
       if (res.status === 200) {
-        setLoading(false);
         setLoggedIn(true);
         setUser(res.data.data);
-        notify(isLoggedIn);
-        navigate("/");
+        toast.success(
+          `${role.charAt(0).toUpperCase() + role.slice(1)} Login Successful`
+        );
+
+        if (role === "admin") navigate("/admin/dashboard");
+        else if (role === "provider") navigate("/dashboard-provider");
+        else navigate("/");
       }
     } catch (error) {
-      console.log("Login error:", error);
+      toast.error(error?.response?.data?.message || "Login failed");
+      console.error("Login error:", error);
     }
   };
 
@@ -112,7 +112,7 @@ const Login = () => {
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            {loading ? "Loading..." : "Login"}
+            Login
           </button>
 
           <div className="text-right my-4 flex justify-center items-center ">

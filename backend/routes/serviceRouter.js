@@ -36,7 +36,7 @@ serviceRouter.get(
   authorizeRoles("admin", "provider", "user"),
   async (req, res) => {
     try {
-      const subcategory = await Subcategory.find();
+      const subcategory = await Subcategory.find().populate("categoryId");
       if (!subcategory) {
         res.send("No Category available");
       }
@@ -52,7 +52,12 @@ serviceRouter.get(
   authorizeRoles("admin", "provider", "user"),
   async (req, res) => {
     try {
-      const service = await Service.find();
+      const service = await Service.find().populate({
+        path: "subcategoryId",
+        populate: {
+          path: "categoryId",
+        },
+      });
       if (!service) {
         res.send("No service available");
       }
@@ -243,7 +248,7 @@ serviceRouter.post(
         iconUrl,
       });
       await category.save();
-      res.json({ message: "category added successfully" });
+      res.json({ message: "category added successfully", data: category });
     } catch (error) {
       res.send("Error: " + error);
     }
@@ -267,7 +272,10 @@ serviceRouter.post(
         categoryId,
       });
       await subcategory.save();
-      res.json({ message: "subcategory added successfully" });
+      res.json({
+        message: "subcategory added successfully",
+        data: subcategory,
+      });
     } catch (error) {
       res.send("Error: " + error);
     }
