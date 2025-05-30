@@ -55,7 +55,7 @@ const Homepage = () => {
   //Professional Services Delivered with Precision and Care
   //What Do You Need Help With Today?
   return (
-    <div className="w-screen h-screen bg-white">
+    <div className="w-screen h-screen bg-white dark:bg-black">
       <div className=" flex flex-col justify-center items-center min-h-[80%] w-screen px-4 text-center">
         <h1 className="text-[3rem] md:text-[4.5rem] font-bold leading-tight tracking-tighter flex flex-wrap items-center justify-center gap-3">
           Choose Your
@@ -71,7 +71,7 @@ const Homepage = () => {
           Preferred Service
         </h1>
 
-        <p className="text-lg mt-4 max-w-xl text-gray-700">
+        <p className="text-lg mt-4 max-w-xl ">
           From cleaning to grooming, plumbing to pampering <br></br>book expert
           services with ease.
         </p>

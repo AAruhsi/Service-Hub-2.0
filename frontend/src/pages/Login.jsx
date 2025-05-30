@@ -2,20 +2,27 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-
+import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
+import { BASE_URL } from "../utils/constants";
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  const { loading, setLoading, setLoggedIn, isLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
-
+  const notify = (isLoggedIn) => {
+    isLoggedIn
+      ? toast.success("Login Successfull")
+      : toast.error("Login Failed");
+  };
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        BASE_URL + "/auth/login",
         {
           email: data.email,
           password: data.password,
@@ -25,6 +32,10 @@ const Login = () => {
       );
 
       if (res.status === 200) {
+        setLoading(false);
+        setLoggedIn(true);
+        setUser(res.data.data);
+        notify(isLoggedIn);
         navigate("/");
       }
     } catch (error) {
@@ -33,7 +44,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center w-full dark:bg-gray-950">
+    <div className="min-h-[80vh] flex items-center justify-center w-full bg-white  dark:bg-gray-950">
       <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">
           Welcome Back!
@@ -101,7 +112,7 @@ const Login = () => {
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Login
+            {loading ? "Loading..." : "Login"}
           </button>
 
           <div className="text-right my-4 flex justify-center items-center ">

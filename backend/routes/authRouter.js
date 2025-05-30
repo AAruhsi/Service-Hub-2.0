@@ -6,7 +6,11 @@ const Provider = require("../models/users/Provider");
 const authRouter = express.Router();
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
-const { authenticateJWT } = require("../middleware/authMiddleware");
+const {
+  authenticateJWT,
+  authorizeRoles,
+} = require("../middleware/authMiddleware");
+const { validatePatchRequest } = require("../middleware/validatePatchRequest");
 
 authRouter.post("/signup/user", validateUserSignup, async (req, res) => {
   try {
@@ -94,32 +98,44 @@ authRouter.post("/login", async (req, res) => {
       const token =
         role === "provider" ? user.getProviderJWT(role) : user.getUserJWT(role);
 
-      res.cookie("token", token);
-      res.send("Login Successfull");
+      res.cookie("token", token, {
+        httpOnly: true,
+        maxAge: 3600000,
+      });
+      res.json({ message: "Login Successfull", data: user });
     } else {
       res.send("password Invalid");
     }
   } catch (error) {
-    res.status(400).send("Error", error.message);
+    res.status(400).send("Error" + error);
   }
 });
 
-authRouter.get("/profile", authenticateJWT, async (req, res) => {
-  try {
-    const user = req.user;
-    res.json({ message: "Cookies fetched", data: user });
-  } catch (error) {
-    res.status(400).send(error);
+authRouter.get(
+  "/profile",
+  authenticateJWT,
+  authorizeRoles("admin", "user", "provider"),
+  async (req, res) => {
+    try {
+      const data = req.userDoc;
+      res.json({ message: "Cookies fetched and USer data sent", data: data });
+    } catch (error) {
+      res.status(400).send(error);
+    }
   }
-});
+);
 
 authRouter.post("/logout", async (req, res) => {
   try {
     res
-      .cookie("token", null, { expires: Date.now() })
-      .send("Logout Successfull");
+      .cookie("token", "", {
+        httpOnly: true,
+        expires: new Date(0),
+      })
+      .json({ message: "Logout successful" });
   } catch (error) {
-    res.status(400).send("Logut not possible" + error);
+    console.error("Logout error:", error.message);
+    res.status(400).json({ message: "Logout failed: " + error.message });
   }
 });
 authRouter.patch("/forgotPassword/user", authenticateJWT, async (req, res) => {
@@ -131,5 +147,29 @@ authRouter.patch("/forgotPassword/user", authenticateJWT, async (req, res) => {
     res.status(400).send(error);
   }
 });
+authRouter.patch(
+  "/user-edit",
+  authenticateJWT,
+  authorizeRoles("user"),
+  validatePatchRequest,
+  async (req, res) => {
+    try {
+      const userID = req.userDoc._id;
+      const updatedUser = await User.findByIdAndUpdate(
+        userID,
+        { $set: req.body },
+        { new: true, runValidators: true }
+      );
+      console.log("the is response for api", updatedUser);
+      if (!res) {
+        res.status(404).json({ message: "User not Found" });
+      }
+      console.log("This is userDOc", req.userDoc);
+      res.json({ message: "USer updated", data: updatedUser });
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  }
+);
 
 module.exports = { authRouter };

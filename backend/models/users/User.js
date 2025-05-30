@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     },
     phoneNo: {
       type: Number,
-      maxlength: 10,
+      match: [/^\d{10}$/, "Phone number must be 10 digits"],
       required: true,
     },
     password: {
@@ -47,9 +47,9 @@ const userSchema = new mongoose.Schema(
 );
 
 //schema methods
-userSchema.methods.getUserJWT = async function (role) {
-  const token = await jwt.sign({ _id: this._id, role }, process.env.JWT_TOKEN, {
-    expiresIn: "1d",
+userSchema.methods.getUserJWT = function (role) {
+  const token = jwt.sign({ _id: this._id, role: role }, process.env.JWT_TOKEN, {
+    expiresIn: "1h",
   });
   return token;
 };
