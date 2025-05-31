@@ -6,9 +6,7 @@ const Admin = require("../models/users/Admin");
 const jwt = require("jsonwebtoken");
 const User = require("../models/users/User");
 const Provider = require("../models/users/Provider");
-const Category = require("../models/category offered/Category");
-const Subcategory = require("../models/category offered/Subcategory");
-const Service = require("../models/category offered/Service");
+
 const {
   authenticateJWT,
   authorizeRoles,
@@ -46,7 +44,7 @@ adminRouter.post("/login", async (req, res) => {
     if (!admin) {
       throw new Error("Admin not valid");
     }
-    console.log(admin);
+
     const decode = await bcrypt.compare(password, admin.password);
     if (!decode) {
       throw new Error("Password invalid");

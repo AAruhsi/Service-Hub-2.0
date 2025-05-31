@@ -1,4 +1,6 @@
 const express = require("express");
+const multer = require("multer");
+const cloudinary = require("../utils/cloudinary.js");
 const validator = require("validator");
 const {
   authenticateJWT,
@@ -11,6 +13,9 @@ const {
   toggleSoftDeleteCategory,
   togglesSoftDeleteSubcategory,
 } = require("../utils/categoryUtil");
+
+const upload = multer({ storage: multer.memoryStorage() });
+const { uploadToCloudinary } = require("../middleware/uploadToCloudinary");
 
 const serviceRouter = express.Router();
 
@@ -68,37 +73,48 @@ serviceRouter.get(
   }
 );
 
+//update category
 serviceRouter.patch(
-  "/category",
+  "/category/:categoryId",
   authenticateJWT,
   authorizeRoles("admin"),
+  upload.single("iconUrl"),
   async (req, res) => {
     try {
-      const { name, _id, iconUrl } = req.body;
+      const { name } = req.body;
+      const { categoryId } = req.params;
 
-      // 1. Validate _id
-      if (!_id) {
+      if (!categoryId) {
         return res.status(400).json({ error: "ID is required" });
       }
 
-      // 2. Validate update fields
       const updateFields = {};
       if (name !== undefined) updateFields.name = name;
-      if (iconUrl !== undefined) updateFields.iconUrl = iconUrl;
+
+      const category = await Category.findById(categoryId);
+      if (!category) {
+        return res.status(404).json({ error: "No Category available" });
+      }
+
+      if (req.file) {
+        // 🔁 Delete old image if it exists
+        if (category.iconPublicId) {
+          await cloudinary.uploader.destroy(category.iconPublicId);
+        }
+
+        // 📤 Upload new image
+        const result = await uploadToCloudinary(req.file.buffer, "categories");
+
+        updateFields.iconUrl = result.secure_url;
+        updateFields.iconPublicId = result.public_id;
+      }
 
       if (Object.keys(updateFields).length === 0) {
         return res.status(400).json({ error: "Nothing to update" });
       }
 
-      // 3. Check if category exists
-      const category = await Category.findById(_id);
-      if (!category) {
-        return res.status(404).json({ error: "No Category available" });
-      }
-
-      // 4. Perform update
       const updatedCategory = await Category.findByIdAndUpdate(
-        _id,
+        categoryId,
         { $set: updateFields },
         { new: true }
       );
@@ -114,31 +130,28 @@ serviceRouter.patch(
   }
 );
 
+//update subcategory
 serviceRouter.patch(
-  "/subcategory",
+  "/subcategory/:id",
   authenticateJWT,
   authorizeRoles("admin"),
   async (req, res) => {
     try {
       //cannot change category ID you need to delete it and make a new subcategory if you need to change
-      const { name, _id } = req.body;
-      // 1. Validate _id
-      if (!_id) {
+      const { name } = req.body;
+      const { id } = req.params;
+      if (!id) {
         return res.status(400).json({ error: "ID is required" });
       }
-      // 2. Validate update fields
-
-      if (name !== undefined)
+      if (name == undefined)
         return res.status(400).json({ error: "Nothing to update" });
 
-      // 3. Check if category exists
-      const subcategory = await Subcategory.findById(_id);
-      if (!subcategory) {
-        return res.status(404).json({ error: "No Subategory available" });
-      }
+      const subcategory = await Subcategory.findByIdAndUpdate(
+        id,
+        { name: name },
+        { new: true }
+      );
 
-      subcategory.name = name;
-      await subcategory.save();
       res.status(200).json({
         message: "SubCategory updated successfully",
         data: subcategory,
@@ -151,39 +164,48 @@ serviceRouter.patch(
 );
 
 serviceRouter.patch(
-  "/service",
+  "/service/:id",
   authenticateJWT,
   authorizeRoles("admin"),
+  upload.single("photo"),
   async (req, res) => {
     try {
-      const { name, _id, photo, min_price, max_price, isActive } = req.body;
-
+      const { name, min_price, max_price, isActive } = req.body;
+      const { id } = req.params;
       // 1. Validate _id
-      if (!_id) {
+      if (!id) {
         return res.status(400).json({ error: "ID is required" });
       }
-
+      const service = await Service.findById(id);
+      if (!service) {
+        return res.status(404).json({ error: "No service available" });
+      }
       // 2. Validate update fields
       const updateFields = {};
       if (name !== undefined) updateFields.name = name;
-      if (photo !== undefined) updateFields.photo = photo;
       if (min_price !== undefined) updateFields.min_price = min_price;
       if (max_price !== undefined) updateFields.max_price = max_price;
       if (isActive !== undefined) updateFields.isActive = isActive;
+
+      if (req.file) {
+        // 🔁 Delete old image if it exists
+        if (service.iconPublicId) {
+          await cloudinary.uploader.destroy(service.iconPublicId);
+        }
+
+        // 📤 Upload new image
+        const result = await uploadToCloudinary(req.file.buffer, "service");
+
+        updateFields.photo = result.secure_url;
+        updateFields.iconPublicId = result.public_id;
+      }
 
       if (Object.keys(updateFields).length === 0) {
         return res.status(400).json({ error: "Nothing to update" });
       }
 
-      // 3. Check if category exists
-      const service = await Service.findById(_id);
-      if (!service) {
-        return res.status(404).json({ error: "No service available" });
-      }
-
-      // 4. Perform update
       const updatedservice = await Service.findByIdAndUpdate(
-        _id,
+        id,
         { $set: updateFields },
         { new: true }
       );
@@ -199,6 +221,7 @@ serviceRouter.patch(
   }
 );
 
+//toggle is Active
 serviceRouter.post(
   "/toggle-category",
   authenticateJWT,
@@ -231,30 +254,39 @@ serviceRouter.post(
   }
 );
 
+//add category
 serviceRouter.post(
   "/category",
   authenticateJWT,
   authorizeRoles("admin"),
+  upload.single("iconUrl"),
   async (req, res) => {
     try {
-      const { name, iconUrl } = req.body;
+      const { name } = req.body;
 
-      if (!validator.isURL(iconUrl)) {
-        throw new Error("Invalid Url ");
+      if (!req.file) {
+        return res.status(400).json({ error: "Image file is required" });
       }
+
+      const result = await uploadToCloudinary(req.file.buffer, "categories");
+      console.log("RESULT: ", result);
 
       const category = new Category({
         name,
-        iconUrl,
+        iconUrl: result.secure_url,
+        iconPublicId: result.public_id,
       });
+
       await category.save();
-      res.json({ message: "category added successfully", data: category });
+      res.json({ message: "Category added successfully", data: category });
     } catch (error) {
-      res.send("Error: " + error);
+      console.error("Upload error:", error);
+      res.status(500).send("Error: " + error.message);
     }
   }
 );
 
+//add subcategory
 serviceRouter.post(
   "/subcategory",
   authenticateJWT,
@@ -286,27 +318,27 @@ serviceRouter.post(
   "/service",
   authenticateJWT,
   authorizeRoles("admin"),
+  upload.single("photo"),
   async (req, res) => {
     try {
-      const { name, subcategoryId, min_price, max_price, photo } = req.body;
-
-      if (!validator.isURL(photo)) {
-        throw new Error("Invalid Url ");
-      }
+      const { name, subcategoryId, min_price, max_price } = req.body;
 
       const subcategory = await Subcategory.findById(subcategoryId);
       if (!subcategory) {
         throw new Error("Subcategory not valid");
       }
+
+      const result = await uploadToCloudinary(req.file.buffer, "service");
       const service = new Service({
         name,
         subcategoryId,
         min_price,
         max_price,
-        photo,
+        photo: result.secure_url,
+        iconPublicId: result.public_id,
       });
       await service.save();
-      res.json({ message: "service added successfully" });
+      res.json({ message: "service added successfully", data: service });
     } catch (error) {
       res.send("Error: " + error);
     }

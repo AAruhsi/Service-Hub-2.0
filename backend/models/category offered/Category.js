@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const categorySchema = new mongoose.Schema({
   name: String,
   iconUrl: String,
+  iconPublicId: String,
   isActive: { type: Boolean, default: true },
 });
 

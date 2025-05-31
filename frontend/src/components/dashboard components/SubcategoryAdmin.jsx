@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { BASE_URL } from "../../utils/constants";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -8,7 +9,50 @@ const SubcategoryAdmin = ({ category }) => {
   const [filteredSubcategories, setFilteredSubCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [modalMode, setModalMode] = useState("add");
+  const [name, setName] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState();
   const PAGE_SIZE = 5;
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      if (modalMode === "add") {
+        const res = await axios.post(
+          `${BASE_URL}/subcategory`,
+          { name, categoryId: category._id },
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (res.status === 200) {
+          setFilteredSubCategories((prev) => [res.data.data, ...prev]);
+          toast.success(res.data.message);
+        }
+      } else if (modalMode === "edit" && selectedCategory) {
+        const res = await axios.patch(
+          `${BASE_URL}/subcategory/${selectedCategory._id}`,
+          { name },
+          { withCredentials: true }
+        );
+
+        setFilteredSubCategories((prev) =>
+          prev.map((cat) =>
+            cat._id === selectedCategory._id ? res.data.data : cat
+          )
+        );
+        toast.success("SubCategory updated!");
+      }
+
+      document.getElementById("my_modal_6").close();
+    } catch (err) {
+      console.error("Error saving subcategory:", err);
+      toast.error("Failed to save subcategory");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchAllSubCategories = async () => {
@@ -48,8 +92,18 @@ const SubcategoryAdmin = ({ category }) => {
   return (
     <div>
       <ul className="list bg-base-100 rounded-box shadow-md">
-        <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
-          Subcategories
+        <li className="p-4 pb-2  opacity-60 tracking-wide flex justify-between items-center">
+          <h1 className="">Subcatgeories</h1>
+          <span
+            className="text-white cursor-pointer bg-green-700 px-2 text-center py-1 rounded-md"
+            onClick={() => {
+              setModalMode("add");
+              setName("");
+              document.getElementById("my_modal_6").showModal();
+            }}
+          >
+            Add +{" "}
+          </span>
         </li>
 
         {loading ? (
@@ -67,7 +121,15 @@ const SubcategoryAdmin = ({ category }) => {
                 </div>
               </div>
               <div className="flex justify-center items-center gap-5 mr-3">
-                <span className="cursor-pointer">
+                <span
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setModalMode("edit");
+                    setName(item.name);
+                    setSelectedCategory(item);
+                    document.getElementById("my_modal_6").showModal();
+                  }}
+                >
                   <EditIcon />
                 </span>
                 {category?.isActive ? (
@@ -109,6 +171,44 @@ const SubcategoryAdmin = ({ category }) => {
           </button>
         </div>
       )}
+
+      <dialog id="my_modal_6" className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-4">
+            {modalMode === "add" ? "Add Category" : "Edit Category"}
+          </h3>
+          <label className="floating-label my-3">
+            <span>Subcategory Name</span>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </label>
+          <label className="floating-label mt-5">
+            <span>Category Name</span>
+            <input
+              type="text"
+              value={category.name}
+              disabled
+              className="input input-bordered w-full"
+            />
+          </label>
+          <div className="modal-action">
+            <form method="dialog" className="flex gap-2">
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={handleSave}
+              >
+                Save
+              </button>
+              <button className="btn">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };

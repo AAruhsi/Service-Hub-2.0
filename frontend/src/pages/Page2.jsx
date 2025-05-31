@@ -1,26 +1,8 @@
 import React, { useState } from "react";
 import { CheckSquare, Square } from "lucide-react";
 
-const services = [
-  { id: 1, label: "Customer Success", icon: "/icons/customer-success.png" },
-  { id: 2, label: "Technical Support", icon: "/icons/technical-support.png" },
-  { id: 3, label: "Content Moderation", icon: "/icons/content-moderation.png" },
-  { id: 4, label: "Data Processing", icon: "/icons/data-processing.png" },
-  {
-    id: 5,
-    label: "Professional Services",
-    icon: "/icons/professional-services.png",
-  },
-];
-
 export default function Page2() {
   const [selected, setSelected] = useState([]);
-
-  const toggleSelect = (id) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
-    );
-  };
 
   return (
     <div className="min-h-[50%]  py-10 px-4 flex flex-col items-center">

@@ -20,6 +20,7 @@ const serviceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  iconPublicId: String,
   isActive: { type: Boolean, default: true },
 });
 
