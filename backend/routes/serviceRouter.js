@@ -19,22 +19,17 @@ const { uploadToCloudinary } = require("../middleware/uploadToCloudinary");
 
 const serviceRouter = express.Router();
 
-serviceRouter.get(
-  "/category",
-  authenticateJWT,
-  authorizeRoles("admin", "provider", "user"),
-  async (req, res) => {
-    try {
-      const category = await Category.find();
-      if (!category) {
-        res.send("No Category available");
-      }
-      res.json({ message: "Category fetched Successfully", data: category });
-    } catch (error) {
-      res.send("error: " + error);
+serviceRouter.get("/category", async (req, res) => {
+  try {
+    const category = await Category.find();
+    if (!category) {
+      res.send("No Category available");
     }
+    res.json({ message: "Category fetched Successfully", data: category });
+  } catch (error) {
+    res.send("error: " + error);
   }
-);
+});
 serviceRouter.get(
   "/subcategory",
   authenticateJWT,

@@ -10,6 +10,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import DashboardHomePage from "./components/dashboard components/DashboardHomePage";
 import CategoryAdmin from "./pages/admin/CategoryAdmin";
 import ProvidersAdmin from "./pages/admin/ProvidersAdmin";
+import Subcategory from "./pages/Subcategory";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/subcategory" element={<Subcategory />}></Route>
           </Route>
 
           {/* admin pages */}
