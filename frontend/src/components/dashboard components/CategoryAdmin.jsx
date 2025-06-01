@@ -20,9 +20,10 @@ const CategoryAdmin = () => {
   const [selectedCategory, setSelectedCategory] = useState();
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
-  const [isActive, setIsActive] = useState(true);
+  // const [isActive, setIsActive] = useState(true);
   const [modalMode, setModalMode] = useState("add");
   const navigate = useNavigate();
+
   const handleSave = async () => {
     try {
       setLoading(true);
@@ -70,6 +71,28 @@ const CategoryAdmin = () => {
       setLoading(false);
     }
   };
+
+  const handleActive = async () => {
+    try {
+      if (!selectedCategory) return;
+      console.log(selectedCategory);
+      const updatedStatus = !selectedCategory.isActive;
+      const res = await axios.post(
+        BASE_URL + "/toggle-category",
+        { categoryId: selectedCategory._id, isActive: updatedStatus },
+        { withCredentials: true }
+      );
+      if (res.status == 200) {
+        toast.success("category status updated!");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update status.");
+    } finally {
+      document.getElementById("isActive_cat_modal").close();
+    }
+  };
+
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login");
@@ -154,11 +177,19 @@ const CategoryAdmin = () => {
               aria-label="success"
               className="status status-success status-xl cursor-pointer tooltip"
               data-tip="Active"
+              onClick={() => {
+                setSelectedCategory(category);
+                document.getElementById("isActive_cat_modal").showModal();
+              }}
             ></div>
           ) : (
             <div
               aria-label="error"
               data-tip="inActive"
+              onClick={() => {
+                setSelectedCategory(category);
+                document.getElementById("isActive_cat_modal").showModal();
+              }}
               className="status status-error status-xl cursor-pointer tooltip"
             ></div>
           )}
@@ -250,6 +281,28 @@ const CategoryAdmin = () => {
                 Save
               </button>
               <button className="btn">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog
+        id="isActive_cat_modal"
+        className="modal modal-bottom sm:modal-middle"
+      >
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Hello!</h3>
+          <p className="py-4">Do you really want to perform this action</p>
+          <div className="modal-action">
+            <form method="dialog">
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={handleActive}
+              >
+                Yes
+              </button>
+              <button className="btn">Close</button>
             </form>
           </div>
         </div>

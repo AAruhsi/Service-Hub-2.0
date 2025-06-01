@@ -12,8 +12,10 @@ const SubcategoryAdmin = ({ category }) => {
   const [modalMode, setModalMode] = useState("add");
   const [name, setName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState();
-  const PAGE_SIZE = 5;
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
 
+  const PAGE_SIZE = 5;
+  const [active, setActive] = useState();
   const handleSave = async () => {
     try {
       setLoading(true);
@@ -51,6 +53,29 @@ const SubcategoryAdmin = ({ category }) => {
       toast.error("Failed to save subcategory");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleActive = async () => {
+    try {
+      if (!selectedSubcategory) return;
+
+      const updatedStatus = !selectedSubcategory.isActive;
+      const res = await axios.post(
+        BASE_URL + "/toggle-subcategory",
+        { _id: selectedSubcategory._id, isActive: updatedStatus },
+        { withCredentials: true }
+      );
+      if (res.status == 200) {
+        toast.success("Subcategory status updated!");
+      }
+
+      setSelectedSubcategory(null); // reset
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to update status.");
+    } finally {
+      document.getElementById("isActive_modal").close();
     }
   };
 
@@ -132,13 +157,21 @@ const SubcategoryAdmin = ({ category }) => {
                 >
                   <EditIcon />
                 </span>
-                {category?.isActive ? (
+                {item.isActive ? (
                   <div
+                    onClick={() => {
+                      setSelectedSubcategory(item);
+                      document.getElementById("isActive_modal").showModal();
+                    }}
                     aria-label="success"
                     className="status status-success status-xl cursor-pointer"
                   ></div>
                 ) : (
                   <div
+                    onClick={() => {
+                      setSelectedSubcategory(item);
+                      document.getElementById("isActive_modal").showModal();
+                    }}
                     aria-label="error"
                     className="status status-error status-xl cursor-pointer"
                   ></div>
@@ -205,6 +238,30 @@ const SubcategoryAdmin = ({ category }) => {
                 Save
               </button>
               <button className="btn">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+
+      {/* Open the modal using document.getElementById('ID').showModal() method */}
+
+      <dialog
+        id="isActive_modal"
+        className="modal modal-bottom sm:modal-middle"
+      >
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Hello!</h3>
+          <p className="py-4">Do you really want to perform this action</p>
+          <div className="modal-action">
+            <form method="dialog">
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={handleActive}
+              >
+                Yes
+              </button>
+              <button className="btn">Close</button>
             </form>
           </div>
         </div>

@@ -14,7 +14,7 @@ export default function Page2() {
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {services.map((service) => (
+        {/* {services.map((service) => (
           <div
             key={service.id}
             className={`relative cursor-pointer bg-white rounded-xl p-4 w-44 h-52 shadow-md hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center ${
@@ -38,7 +38,7 @@ export default function Page2() {
               )}
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );

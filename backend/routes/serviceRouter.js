@@ -227,7 +227,7 @@ serviceRouter.post(
   authenticateJWT,
   authorizeRoles("admin"),
   async (req, res) => {
-    const { categoryId } = req.body;
+    const { categoryId, isActive } = req.body;
 
     try {
       await toggleSoftDeleteCategory(categoryId, isActive);
@@ -314,6 +314,7 @@ serviceRouter.post(
   }
 );
 
+//add service
 serviceRouter.post(
   "/service",
   authenticateJWT,

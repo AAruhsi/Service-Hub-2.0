@@ -19,6 +19,7 @@ const ServiceAdmin = ({ category }) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [file, setFile] = useState(null);
+  const [active, setActive] = useState();
 
   const handleSave = async () => {
     try {
@@ -43,6 +44,7 @@ const ServiceAdmin = ({ category }) => {
           toast.success(res.data.message);
         }
       } else if (modalMode === "edit" && selectedService) {
+        form.append("isActive", active);
         const res = await axios.patch(
           `${BASE_URL}/service/${selectedService._id}`,
           form,
@@ -199,6 +201,7 @@ const ServiceAdmin = ({ category }) => {
                         setFile(null);
                         setSelectedSubcategory(service.subcategoryId);
                         setSelectedService(service);
+                        setActive(service.isActive);
                         document.getElementById("my_modal_7").showModal();
                       }}
                     >
@@ -297,6 +300,18 @@ const ServiceAdmin = ({ category }) => {
             onChange={(e) => setFile(e.target.files[0])}
             className="file-input file-input-bordered w-full"
           />
+          <label className="label my-4">
+            Is Active
+            <input
+              type="checkbox"
+              defaultChecked={active}
+              className="toggle toggle-success ml-4"
+              onClick={() => {
+                const newValue = !active;
+                setActive(newValue);
+              }}
+            />
+          </label>
 
           <div className="modal-action">
             <form method="dialog" className="flex gap-2">
