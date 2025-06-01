@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const {
@@ -14,9 +17,45 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data); // Replace with API call
+      const formData = new FormData();
+      formData.append("firstName", data.firstName);
+      formData.append("lastName", data.lastName);
+      formData.append("email", data.email);
+      formData.append("phoneNo", data.phoneNo);
+      formData.append("gender", data.gender);
+      formData.append("role", data.role);
+      formData.append("address", data.address);
+      formData.append("password", data.password);
+
+      if (data.role == "user") {
+        const res = await axios.post(BASE_URL + "/auth/signup/user", data, {
+          withCredentials: true,
+        });
+        console.log(res);
+        if (res.status == 200) {
+          toast.success("Signup Successfull");
+          navigate("/login");
+        }
+      } else {
+        formData.append("photo", data.photo[0]); // file is an array
+
+        const res = await axios.post(
+          BASE_URL + "/auth/signup/provider",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
+          }
+        );
+        console.log(res);
+        if (res.status == 200) {
+          toast.success("Signup Successfull");
+          navigate("/login");
+        }
+      }
     } catch (error) {
       console.log("Register error:", error);
+      toast.error("signup failed Please Try Again");
     }
   };
 

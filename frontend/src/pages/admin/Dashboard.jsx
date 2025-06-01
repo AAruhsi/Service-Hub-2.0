@@ -11,7 +11,7 @@ const Dashboard = () => {
           <Navbar />
         </div>
 
-        <div class="px-6 pt-10 max-h-screen  bg-gray-50">
+        <div class="px-6 pt-10 max-h-screen  bg-gray-100">
           <Outlet />
         </div>
       </div>

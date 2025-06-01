@@ -6,8 +6,12 @@ import { FixedSizeList as List } from "react-window";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-const SubcategoryAdmin = lazy(() => import("./SubcategoryAdmin"));
-const ServiceAdmin = lazy(() => import("./ServiceAdmin"));
+const SubcategoryAdmin = lazy(() =>
+  import("../../components/dashboard components/SubcategoryAdmin")
+);
+const ServiceAdmin = lazy(() =>
+  import("../../components/dashboard components/ServiceAdmin")
+);
 
 const PAGE_SIZE = 5;
 

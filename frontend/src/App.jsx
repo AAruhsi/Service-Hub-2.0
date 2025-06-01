@@ -8,7 +8,8 @@ import { AuthProvider } from "./context/AuthContext";
 import ProfilePage from "./pages/Profile";
 import Dashboard from "./pages/admin/Dashboard";
 import DashboardHomePage from "./components/dashboard components/DashboardHomePage";
-import CategoryAdmin from "./components/dashboard components/CategoryAdmin";
+import CategoryAdmin from "./pages/admin/CategoryAdmin";
+import ProvidersAdmin from "./pages/admin/ProvidersAdmin";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="dashboard" element={<Dashboard />}>
               <Route path="home" element={<DashboardHomePage />} />
               <Route path="category" element={<CategoryAdmin />} />
+              <Route path="providers" element={<ProvidersAdmin />} />
             </Route>
           </Route>
         </Routes>

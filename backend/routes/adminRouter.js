@@ -66,6 +66,7 @@ adminRouter.post("/login", async (req, res) => {
   }
 });
 
+//get all users
 adminRouter.get(
   "/users",
   authenticateJWT,
@@ -83,6 +84,7 @@ adminRouter.get(
   }
 );
 
+//get all providers
 adminRouter.get(
   "/providers",
   authenticateJWT,
@@ -100,6 +102,7 @@ adminRouter.get(
   }
 );
 
+//provider approval
 adminRouter.patch(
   "/provider/approval/:id",
   authenticateJWT,

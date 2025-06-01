@@ -6,6 +6,9 @@ const Provider = require("../models/users/Provider");
 const authRouter = express.Router();
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
+const { uploadToCloudinary } = require("../middleware/uploadToCloudinary");
 const {
   authenticateJWT,
   authorizeRoles,
@@ -41,47 +44,52 @@ authRouter.post("/signup/user", validateUserSignup, async (req, res) => {
   }
 });
 
-authRouter.post("/signup/provider", validateUserSignup, async (req, res) => {
-  try {
-    const {
-      firstName,
-      lastName,
-      email,
-      phoneNo,
-      password,
-      gender,
-      address,
-      photo,
-    } = req.body;
+authRouter.post(
+  "/signup/provider",
+  upload.single("photo"),
+  validateUserSignup,
 
-    if (!validator.isURL(photo)) {
-      return res.status(400).send("Please Provide valid photo");
+  async (req, res) => {
+    try {
+      const { firstName, lastName, email, phoneNo, password, gender, address } =
+        req.body;
+
+      if (!req.file) {
+        return res.status(400).json({ error: "Image file is required" });
+      }
+
+      const result = await uploadToCloudinary(req.file.buffer, "providers");
+      console.log(result);
+      const existingUser = await Provider.findOne({ email });
+      if (existingUser) {
+        return res
+          .status(400)
+          .send("Provider already Registered. Please login.");
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const newProvider = new Provider({
+        firstName,
+        lastName,
+        email,
+        phoneNo,
+        password: hashedPassword,
+        gender,
+        address,
+        photo: result.secure_url,
+        doj: Date.now(),
+        iconPublicId: result.public_id,
+      });
+
+      await newProvider.save();
+      res.status(200).send("Service Provider registered successfully");
+    } catch (error) {
+      console.error("Signup error:", error);
+      res.status(500).send("Internal server error");
     }
-
-    const user = await Provider.findOne({ email });
-    if (user) {
-      return res.send("Provider already Registered please login");
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newProvider = new Provider({
-      firstName,
-      lastName,
-      email,
-      phoneNo,
-      password: hashedPassword,
-      gender,
-      address,
-      photo,
-      doj: Date.now(),
-    });
-
-    await newProvider.save();
-    res.status(200).send("Service Provide registered successfully");
-  } catch (error) {
-    res.status(500).send(error);
   }
-});
+);
 
 authRouter.post("/login", async (req, res) => {
   try {

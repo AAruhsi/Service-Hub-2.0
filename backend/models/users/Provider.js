@@ -62,6 +62,7 @@ const providerSchema = new mongoose.Schema(
       maxlength: 1,
       default: 3,
     },
+    iconPublicId: String,
     approval: {
       type: Boolean,
       required: true,
