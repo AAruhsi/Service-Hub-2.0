@@ -68,6 +68,46 @@ serviceRouter.get(
   }
 );
 
+//get subcategory of catgeory :id
+serviceRouter.get(
+  "/subcategory/:id",
+  authenticateJWT,
+  authorizeRoles("admin", "user", "provider"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) res.status(401).send("Id needed");
+      const subcategories = await Subcategory.find({ categoryId: id });
+      res.json({ message: "Subcatgeorie received", data: subcategories });
+    } catch (error) {
+      res.status(400).send("Erro fetcheing dataa of subcatgeories");
+    }
+  }
+);
+
+//get service of catgeory :id
+serviceRouter.get(
+  "/service/:categoryId",
+  authenticateJWT,
+  authorizeRoles("admin", "user", "provider"),
+  async (req, res) => {
+    try {
+      const { categoryId } = req.params;
+      if (!categoryId) res.status(401).send("Id needed");
+      const subcategories = await Subcategory.find({
+        categoryId: categoryId,
+      }).select("_id");
+
+      const services = await Service.find({
+        subcategoryId: { $in: subcategories.map((s) => s._id) },
+      }).limit(100); // Always use limits in production APIs
+      res.json({ message: "services received", data: services });
+    } catch (error) {
+      res.status(400).send("Erro fetcheing dataa of subcatgeories");
+    }
+  }
+);
+
 //update category
 serviceRouter.patch(
   "/category/:categoryId",

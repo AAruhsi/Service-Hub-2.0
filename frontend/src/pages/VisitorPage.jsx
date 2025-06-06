@@ -25,6 +25,9 @@ const VisitorPage = () => {
 
   return (
     <>
+      {/* <div className="bg-white dark:bg-red-400 text-black dark:text-white p-4">
+        Hello world
+      </div> */}
       <Navbar />
       <Outlet />
     </>

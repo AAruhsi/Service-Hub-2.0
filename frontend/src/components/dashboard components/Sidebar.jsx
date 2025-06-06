@@ -1,9 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = ({ role = "admin" }) => {
+  // src/config/menuConfig.js
+
+  const menuItems = {
+    admin: [
+      { label: "Dashboard", path: "/admin/dashboard/home" },
+      { label: "Categories", path: "/admin/dashboard/category" },
+      { label: "Providers", path: "/admin/dashboard/providers" },
+    ],
+    provider: [
+      { label: "Dashboard", path: "/provider/dashboard/home" },
+      { label: "My Services", path: "/provider/dashboard/services" },
+      { label: "Appointments", path: "/provider/dashboard/appointments" },
+    ],
+  };
+
   const location = useLocation();
-  const [selected, setSelected] = useState("dashboard");
 
   const isActive = (path) => location.pathname.includes(path);
 
@@ -13,79 +27,27 @@ const Sidebar = () => {
         <div className="mt-8 text-center">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuPzAOB6d0BxKBBN7Kr5fCEwML4vGslJXX2w&s"
-            alt="Admin"
+            alt={role}
             className="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28"
           />
-          <h5 className="mt-4 text-xl font-semibold text-gray-600">Admin</h5>
+          <h5 className="mt-4 text-xl font-semibold text-gray-600">{role}</h5>
         </div>
 
         <ul className="space-y-2 tracking-wide mt-8">
-          <li>
-            <Link
-              to="/admin/dashboard/home"
-              onClick={() => setSelected("home")}
-              className={`relative px-4 py-3 flex items-center space-x-4 rounded-xl ${
-                isActive("home")
-                  ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
-                  : "text-gray-600 group"
-              }`}
-            >
-              <span className="font-medium">Dashboard</span>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/admin/dashboard/category"
-              onClick={() => setSelected("category")}
-              className={`px-4 py-3 flex items-center space-x-4 rounded-md ${
-                isActive("category")
-                  ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
-                  : "text-gray-600 group"
-              }`}
-            >
-              <span>Categories</span>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              to="/admin/dashboard/providers"
-              onClick={() => setSelected("providers")}
-              className={`px-4 py-3 flex items-center space-x-4 rounded-md ${
-                isActive("providers")
-                  ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
-                  : "text-gray-600 group"
-              }`}
-            >
-              <span className="group-hover:text-gray-700">Providers</span>
-            </Link>
-          </li>
-          {/* 
-
-          <li>
-            <Link
-              to="/admin/dashboard/other"
-              className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+          {menuItems[role].map((item) => (
+            <li key={item.path}>
+              <Link
+                to={item.path}
+                className={`px-4 py-3 flex items-center space-x-4 rounded-md ${
+                  isActive(item.path)
+                    ? "text-white bg-gradient-to-r from-sky-600 to-cyan-400"
+                    : "text-gray-600 group"
+                }`}
               >
-                <path
-                  className="fill-current"
-                  d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"
-                />
-                <path
-                  className="fill-current text-gray-300 group-hover:text-cyan-300"
-                  d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"
-                />
-              </svg>
-              <span className="group-hover:text-gray-700">Other Data</span>
-            </Link>
-          </li> */}
+                <span>{item.label}</span>
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </aside>

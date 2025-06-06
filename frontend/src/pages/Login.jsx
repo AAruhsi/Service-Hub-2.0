@@ -34,7 +34,7 @@ const Login = () => {
         );
 
         if (role === "admin") navigate("/admin/dashboard");
-        else if (role === "provider") navigate("/dashboard-provider");
+        else if (role === "provider") navigate("/provider/dashboard");
         else navigate("/");
       }
     } catch (error) {

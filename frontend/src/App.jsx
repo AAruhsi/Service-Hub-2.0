@@ -11,6 +11,7 @@ import DashboardHomePage from "./components/dashboard components/DashboardHomePa
 import CategoryAdmin from "./pages/admin/CategoryAdmin";
 import ProvidersAdmin from "./pages/admin/ProvidersAdmin";
 import Subcategory from "./pages/Subcategory";
+import DashboardProvider from "./pages/provider/DashboardProvider";
 
 const App = () => {
   return (
@@ -24,7 +25,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/subcategory" element={<Subcategory />}></Route>
+            <Route path="/subcategory/:id" element={<Subcategory />}></Route>
           </Route>
 
           {/* admin pages */}
@@ -33,6 +34,13 @@ const App = () => {
               <Route path="home" element={<DashboardHomePage />} />
               <Route path="category" element={<CategoryAdmin />} />
               <Route path="providers" element={<ProvidersAdmin />} />
+            </Route>
+          </Route>
+          <Route path="provider">
+            <Route path="dashboard" element={<DashboardProvider />}>
+              <Route path="home" element={<DashboardHomePage />} />
+              {/* <Route path="category" element={<CategoryAdmin />} />
+              <Route path="providers" element={<ProvidersAdmin />} /> */}
             </Route>
           </Route>
         </Routes>

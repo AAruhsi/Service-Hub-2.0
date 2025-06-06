@@ -18,7 +18,6 @@ export default function Page2() {
           withCredentials: true,
         });
         if (res.status == 200) {
-          console.log(res.data.data);
           setCategories(res.data.data);
         }
       } catch (error) {
@@ -30,7 +29,7 @@ export default function Page2() {
 
   const toggleSelect = async (id) => {
     if (isLoggedIn) {
-      navigate("/subcategory");
+      navigate("/subcategory/" + id);
     } else {
       navigate("/login");
       toast.success("Please login first");

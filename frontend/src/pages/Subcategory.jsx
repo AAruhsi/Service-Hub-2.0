@@ -1,68 +1,63 @@
 import React, { useEffect, useState } from "react";
-
-// Dummy data with service images
-const dummySubcategories = [
-  { id: "1", name: "Cleaning" },
-  { id: "2", name: "Plumbing" },
-  { id: "3", name: "Electrical" },
-];
-
-const dummyServices = {
-  1: [
-    {
-      name: "Sofa Cleaning",
-      image: "https://via.placeholder.com/300x200?text=Sofa+Cleaning",
-    },
-    {
-      name: "Carpet Cleaning",
-      image: "https://via.placeholder.com/300x200?text=Carpet+Cleaning",
-    },
-    {
-      name: "Sofa Cleaning",
-      image: "https://via.placeholder.com/300x200?text=Sofa+Cleaning",
-    },
-    {
-      name: "Carpet Cleaning",
-      image: "https://via.placeholder.com/300x200?text=Carpet+Cleaning",
-    },
-    {
-      name: "Sofa Cleaning",
-      image: "https://via.placeholder.com/300x200?text=Sofa+Cleaning",
-    },
-    {
-      name: "Carpet Cleaning",
-      image: "https://via.placeholder.com/300x200?text=Carpet+Cleaning",
-    },
-  ],
-  2: [
-    {
-      name: "Leak Fix",
-      image: "https://via.placeholder.com/300x200?text=Leak+Fix",
-    },
-  ],
-  3: [
-    {
-      name: "Fan Repair",
-      image: "https://via.placeholder.com/300x200?text=Fan+Repair",
-    },
-  ],
-};
+import { useNavigate, useParams } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 function Subcategory() {
+  const { id } = useParams();
+  const { isLoggedIn } = useAuth();
   const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+
+  const [allServices, setAllServices] = useState([]);
   const [services, setServices] = useState([]);
 
+  const navigate = useNavigate();
   useEffect(() => {
-    setSubcategories(dummySubcategories);
-    setSelectedSubcategory(dummySubcategories[0]);
+    if (!isLoggedIn) navigate("/login");
+  });
+
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/subcategory/" + id, {
+          withCredentials: true,
+        });
+        // console.log(res.data.data);
+        setSubcategories(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const fetchServices = async () => {
+      try {
+        const res = await axios.get(BASE_URL + "/service/" + id, {
+          withCredentials: true,
+        });
+        const data = res.data.data;
+        setAllServices(data); // ✅ store all
+
+        if (data.length > 0) {
+          setSelectedSubcategory(subcategories[0]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchSubcategories();
+    fetchServices();
   }, []);
 
   useEffect(() => {
     if (selectedSubcategory) {
-      setServices(dummyServices[selectedSubcategory.id] || []);
+      const filtered = allServices.filter(
+        (service) => service.subcategoryId === selectedSubcategory._id
+      );
+      setServices(filtered);
     }
-  }, [selectedSubcategory]);
+  }, [selectedSubcategory, allServices]);
 
   return (
     <div className="flex h-[88vh] bg-base-200">
@@ -71,10 +66,10 @@ function Subcategory() {
         <h2 className="text-lg text-gray-500 font-bold mb-4">Subcategories</h2>
         <ul className="menu bg-base-100 rounded-box w-full mr-0 pr-0">
           {subcategories.map((sub) => (
-            <li key={sub.id} className="">
+            <li key={sub._id} className="">
               <button
                 className={`btn btn-ghost justify-start w-[100%] text-left mb-4 ${
-                  selectedSubcategory?.id === sub.id
+                  selectedSubcategory?._id === sub._id
                     ? "bg-black shadow-2xl text-white scale-105"
                     : ""
                 }`}
@@ -104,7 +99,7 @@ function Subcategory() {
               <div key={index} className="card bg-base-100 shadow-md">
                 <figure>
                   <img
-                    src={service.image}
+                    src={service.photo}
                     alt={service.name}
                     className="w-full h-48 object-cover"
                   />

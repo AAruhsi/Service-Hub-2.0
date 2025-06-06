@@ -42,7 +42,6 @@ const Navbar = () => {
       </Link>
       <div className="flex gap-6 justify-evenly items-center cursor-pointer">
         <span onClick={toggleTheme}>
-          {" "}
           {theme == "light" ? <LightModeIcon /> : <DarkModeIcon />}
         </span>
 
