@@ -5,6 +5,8 @@ const { authRouter } = require("./routes/authRouter");
 const { adminRouter } = require("./routes/adminRouter");
 const { serviceRouter } = require("./routes/serviceRouter");
 const cors = require("cors");
+const { serviceOfferedRouter } = require("./routes/servicesOfferedRouter");
+const { providerRouter } = require("./routes/providerRoute");
 require("./listener/categoryListener");
 
 require("dotenv").config();
@@ -27,6 +29,8 @@ app.use(cookieParser());
 app.use("/api/auth/", authRouter);
 app.use("/api/admin/", adminRouter);
 app.use("/api", serviceRouter);
+app.use("/api/serviceOffered/", serviceOfferedRouter);
+app.use("/api/provider/", providerRouter);
 
 connectDB()
   .then(() => {

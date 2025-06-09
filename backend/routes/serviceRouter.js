@@ -108,6 +108,22 @@ serviceRouter.get(
   }
 );
 
+//get service of subcategory :id
+serviceRouter.get("/service/subcategory/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const services = await Service.find({ subcategoryId: id }); // match field name
+
+    res.status(200).json({
+      message: "service ",
+      data: services,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 //update category
 serviceRouter.patch(
   "/category/:categoryId",

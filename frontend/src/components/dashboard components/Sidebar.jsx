@@ -13,7 +13,7 @@ const Sidebar = ({ role = "admin" }) => {
     provider: [
       { label: "Dashboard", path: "/provider/dashboard/home" },
       { label: "My Services", path: "/provider/dashboard/services" },
-      { label: "Appointments", path: "/provider/dashboard/appointments" },
+      { label: "Appointments", path: "/provider/dashboard/availability" },
     ],
   };
 

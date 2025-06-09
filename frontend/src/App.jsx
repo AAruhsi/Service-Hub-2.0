@@ -12,6 +12,8 @@ import CategoryAdmin from "./pages/admin/CategoryAdmin";
 import ProvidersAdmin from "./pages/admin/ProvidersAdmin";
 import Subcategory from "./pages/Subcategory";
 import DashboardProvider from "./pages/provider/DashboardProvider";
+import ServiceProviding from "./pages/provider/ServiceProviding";
+import Availability from "./pages/provider/Availability";
 
 const App = () => {
   return (
@@ -39,8 +41,8 @@ const App = () => {
           <Route path="provider">
             <Route path="dashboard" element={<DashboardProvider />}>
               <Route path="home" element={<DashboardHomePage />} />
-              {/* <Route path="category" element={<CategoryAdmin />} />
-              <Route path="providers" element={<ProvidersAdmin />} /> */}
+              <Route path="services" element={<ServiceProviding />} />
+              <Route path="availability" element={<Availability />} />
             </Route>
           </Route>
         </Routes>
