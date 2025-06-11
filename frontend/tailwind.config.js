@@ -1,9 +1,6 @@
 export default {
-  darkMode: "class", // MUST be 'class' to toggle manually
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}", // Make sure Tailwind scans your files
-  ],
+  darkMode: "class",
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
 
   theme: {
     extend: {

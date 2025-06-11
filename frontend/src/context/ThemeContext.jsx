@@ -27,27 +27,12 @@ export const ThemeContext = createContext();
 // };
 
 export const ThemeProvider = ({ children }) => {
-  const getInitialTheme = () => {
-    // Check localStorage
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) return savedTheme;
-
-    // Check system preference
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    return prefersDark ? "dark" : "light";
-  };
-
-  const [theme, setTheme] = useState(getInitialTheme);
+  const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.toggle("dark", theme === "dark");
     localStorage.setItem("theme", theme);
-
-    console.log("Current theme:", theme);
-    console.log("HTML classes:", root.className);
   }, [theme]);
 
   const toggleTheme = () => {

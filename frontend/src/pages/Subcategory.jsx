@@ -3,6 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
+
+const bookingSlots = {
+  morning: ["09:00", "10:00", "11:00"],
+  evening: ["13:00", "14:00", "15:00"],
+  night: ["18:00", "19:00", "20:00"],
+};
 
 function Subcategory() {
   const { id } = useParams();
@@ -13,7 +20,12 @@ function Subcategory() {
   const [allServices, setAllServices] = useState([]);
   const [services, setServices] = useState([]);
 
+  const [selectedService, setSelectedService] = useState(null);
+  const [bookingDate, setBookingDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!isLoggedIn) navigate("/login");
   });
@@ -58,6 +70,57 @@ function Subcategory() {
       setServices(filtered);
     }
   }, [selectedSubcategory, allServices]);
+
+  const getTimeOfDay = (selectedTime) => {
+    for (const [timeOfDay, slots] of Object.entries(bookingSlots)) {
+      if (slots.includes(selectedTime)) {
+        return timeOfDay;
+      }
+    }
+    return null; // Return null if no match is found
+  };
+  const openModal = (service) => {
+    setSelectedService(service);
+    document.getElementById("bookingModal").showModal();
+  };
+
+  const handleBooking = () => {
+    if (!bookingDate || !selectedTime) {
+      toast.error("Please select both date and time!");
+      return;
+    }
+
+    const selected = new Date(bookingDate);
+    const today = new Date();
+
+    // Set to midnight to avoid time differences
+    selected.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (selected <= today) {
+      toast.error("Please select a date after today.");
+      return;
+    }
+    const timeOfDay = getTimeOfDay(selectedTime);
+    const selectedData = {
+      service: selectedService,
+      date: bookingDate,
+      time: selectedTime,
+      timeOfDay: timeOfDay,
+    };
+    console.log("selected time", selectedTime);
+    console.log(" time of day", timeOfDay);
+    navigate("/selectedProvider", { state: selectedData });
+    toast.success(
+      `Booked ${selectedService.name} on ${bookingDate} at ${selectedTime}`
+    );
+
+    // Reset modal
+    setBookingDate("");
+    setSelectedTime("");
+    setSelectedService(null);
+    document.getElementById("bookingModal").close();
+  };
 
   return (
     <div className="flex h-[88vh] bg-base-200">
@@ -107,7 +170,12 @@ function Subcategory() {
                 <div className="card-body">
                   <div className="flex justify-between items-center">
                     <h3 className="card-title">{service.name}</h3>
-                    <button className="btn btn-primary btn-sm">Book</button>
+                    <button
+                      className="btn btn-primary btn-sm"
+                      onClick={() => openModal(service)}
+                    >
+                      Book
+                    </button>
                   </div>
                 </div>
               </div>
@@ -115,6 +183,59 @@ function Subcategory() {
           </div>
         )}
       </main>
+
+      {/* Booking Modal */}
+      <dialog id="bookingModal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg mb-4">
+            Book: {selectedService?.name}
+          </h3>
+
+          <div className="form-control mb-4">
+            <label className="label mr-3">Select Date</label>
+            <input
+              type="date"
+              className="input input-bordered"
+              value={bookingDate}
+              onChange={(e) => setBookingDate(e.target.value)}
+            />
+          </div>
+          <label className="mb-2 label">Select Time</label>
+          <div className="grid grid-cols-3 gap-2">
+            {Object.entries(bookingSlots).map(([period, times]) => (
+              <div key={period}>
+                <p className="text-sm capitalize mb-2">{period}</p>
+                {times.map((time) => (
+                  <button
+                    key={time}
+                    className={`btn btn-xs mb-1 w-full ${
+                      selectedTime === time ? "btn-primary" : "btn-outline"
+                    }`}
+                    onClick={() => setSelectedTime(time)}
+                  >
+                    {time}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div className="modal-action w-[100%]  flex justify-center items-center">
+            <button className="btn btn-primary flex-1" onClick={handleBooking}>
+              Confirm Booking
+            </button>
+            <button
+              className="btn flex-1 bg-red-500 text-white"
+              onClick={() => {
+                document.getElementById("bookingModal").close();
+                setSelectedService(null);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

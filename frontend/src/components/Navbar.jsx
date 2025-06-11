@@ -15,6 +15,15 @@ const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { isLoggedIn, setLoggedIn } = useAuth();
   const navigate = useNavigate();
+
+  // const toggleTheme = () => {
+  //   const currentTheme = document.documentElement.getAttribute("class");
+
+  //   const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+  //   document.documentElement.setAttribute("class", newTheme);
+  // };
+
   const handlelogout = async () => {
     try {
       const res = await axios.post(
@@ -34,12 +43,13 @@ const Navbar = () => {
     }
   };
   return (
-    <div className="w-full h-20 border-b-1 dark:bg-gray-800 dark:text-white border-gray-300 bg-white text-black flex justify-between items-center px-10">
+    <div className=" dark:bg-black dark:text-white w-full h-20 border-b-1  border-gray-300  flex justify-between items-center px-10">
       <Link to="/">
-        <div className="logo w-fit h-fit pl-2 font-extrabold  text-2xl dark:text-red-300">
+        <div className="logo w-fit h-fit pl-2 font-extrabold  text-2xl ">
           Service<span className="font-extralight font-serif">Hub</span>
         </div>
       </Link>
+
       <div className="flex gap-6 justify-evenly items-center cursor-pointer">
         <span onClick={toggleTheme}>
           {theme == "light" ? <LightModeIcon /> : <DarkModeIcon />}

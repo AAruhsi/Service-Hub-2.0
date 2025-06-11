@@ -46,24 +46,4 @@ providerRouter.get("/availability/:id", async (req, res) => {
   }
 });
 
-providerRouter.patch("/:id", async (req, res) => {
-  try {
-    const { price } = req.body;
-    const { id } = req.params;
-
-    if (!id) res.status(400).send("Incomplete details");
-
-    const serviceData = await ServiceOffered.findByIdAndUpdate(
-      id,
-      { price },
-      { new: true }
-    );
-
-    res.json({ message: "Data updated successfully", data: serviceData });
-  } catch (error) {
-    console.error("Error fetching services:", error);
-    res.status(400).send(error);
-  }
-});
-
 module.exports = { providerRouter };

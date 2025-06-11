@@ -28,8 +28,17 @@ const Availability = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const isAvailabilityReady = (avail) => {
+    return (
+      avail &&
+      Object.keys(avail).length > 0 &&
+      daysOfWeek.every((day) => day in avail)
+    );
+  };
+
   useEffect(() => {
     const fetchAvailability = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(
           `${BASE_URL}/provider/availability/${user._id}`,
@@ -37,10 +46,13 @@ const Availability = () => {
             withCredentials: true,
           }
         );
-        const fetched = res.data.data[0] || generateEmptyAvailability();
+        const fetched =
+          res.data.data.length > 0
+            ? res.data.data[0].availability
+            : generateEmptyAvailability();
 
-        setAvailability(fetched.availability);
-        setTempAvailability(fetched.availability);
+        setAvailability(fetched);
+        setTempAvailability(fetched);
       } catch (error) {
         console.error("Fetch error:", error);
         const empty = generateEmptyAvailability();
@@ -89,10 +101,12 @@ const Availability = () => {
     }
   };
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
+  // if (loading || !isAvailabilityReady(availability)) {
+  //   return <div className="text-center h-screen">Loading...</div>;
+  // }
 
   return (
-    <div className="w-[80vw] h-[80vh] mx-auto p-6 overflow-auto bg-base-200 rounded-xl shadow-lg">
+    <div className="w-[80vw] h-[80vh] mx-auto  p-6 overflow-auto bg-base-200 rounded-xl shadow-lg">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-neutral">
           🗓️ Weekly Availability
@@ -104,33 +118,37 @@ const Availability = () => {
           ✏️ Edit
         </button>
       </div>
+      {!loading && isAvailabilityReady(availability) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {daysOfWeek.map((day) => (
+            <div
+              key={day}
+              className="card bg-base-100 p-4 shadow-md rounded-lg"
+            >
+              <h3 className="text-lg font-semibold text-primary mb-2">{day}</h3>
+              <p className="text-sm text-gray-700 min-h-[1.5rem]">
+                {(() => {
+                  const dayAvailability = availability[day];
+                  if (!dayAvailability)
+                    return (
+                      <span className="text-gray-400 italic">No shifts</span>
+                    );
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {daysOfWeek.map((day) => (
-          <div key={day} className="card bg-base-100 p-4 shadow-md rounded-lg">
-            <h3 className="text-lg font-semibold text-primary mb-2">{day}</h3>
-            <p className="text-sm text-gray-700 min-h-[1.5rem]">
-              {(() => {
-                const dayAvailability = availability[day];
-                if (!dayAvailability)
-                  return (
+                  const activeShifts = Object.entries(dayAvailability)
+                    .filter(([key, value]) => key !== "_id" && value === true)
+                    .map(([key]) => shiftLabels[key]);
+
+                  return activeShifts.length > 0 ? (
+                    activeShifts.join(", ")
+                  ) : (
                     <span className="text-gray-400 italic">No shifts</span>
                   );
-                // console.log("Dataof " + day + "this is", dayAvailability);
-                const activeShifts = Object.entries(dayAvailability)
-                  .filter(([key, value]) => key !== "_id" && value === true)
-                  .map(([key]) => shiftLabels[key]);
-
-                return activeShifts.length > 0 ? (
-                  activeShifts.join(", ")
-                ) : (
-                  <span className="text-gray-400 italic">No shifts</span>
-                );
-              })()}
-            </p>
-          </div>
-        ))}
-      </div>
+                })()}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Modal */}
       {isEditing && (

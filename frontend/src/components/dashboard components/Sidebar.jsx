@@ -9,6 +9,7 @@ const Sidebar = ({ role = "admin" }) => {
       { label: "Dashboard", path: "/admin/dashboard/home" },
       { label: "Categories", path: "/admin/dashboard/category" },
       { label: "Providers", path: "/admin/dashboard/providers" },
+      { label: "Offers", path: "/admin/dashboard/offers" },
     ],
     provider: [
       { label: "Dashboard", path: "/provider/dashboard/home" },
@@ -22,7 +23,7 @@ const Sidebar = ({ role = "admin" }) => {
   const isActive = (path) => location.pathname.includes(path);
 
   return (
-    <aside className="ml-[-100%] fixed top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r border-gray-300 bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]">
+    <aside className="ml-[-100%] fixed top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r border-gray-300 bg-white dark:bg-black dark:text-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]">
       <div>
         <div className="mt-8 text-center">
           <img

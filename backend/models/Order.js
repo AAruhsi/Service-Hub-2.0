@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema(
   {
     customer: {
@@ -25,7 +26,6 @@ const orderSchema = new mongoose.Schema(
 
     timeSlot: {
       type: String,
-      enum: ["MORNING", "AFTERNOON", "NIGHT"],
       required: true,
     },
 
@@ -33,7 +33,14 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    customerName: {
+      type: String,
+      required: true,
+    },
+    phoneNo: {
+      type: Number,
+      required: true,
+    },
     offer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Offer",
@@ -53,7 +60,7 @@ const orderSchema = new mongoose.Schema(
     paymentStatus: {
       type: String,
       enum: ["PENDING", "SUCCESS", "FAILED"],
-      default: "PENDING",
+      default: "SUCCESS",
     },
 
     orderStatus: {

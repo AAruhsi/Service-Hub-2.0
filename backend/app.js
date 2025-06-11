@@ -7,6 +7,9 @@ const { serviceRouter } = require("./routes/serviceRouter");
 const cors = require("cors");
 const { serviceOfferedRouter } = require("./routes/servicesOfferedRouter");
 const { providerRouter } = require("./routes/providerRoute");
+const { offerRouter } = require("./routes/offerRouter");
+const { orderRouter } = require("./routes/orderRoutes");
+
 require("./listener/categoryListener");
 
 require("dotenv").config();
@@ -31,6 +34,8 @@ app.use("/api/admin/", adminRouter);
 app.use("/api", serviceRouter);
 app.use("/api/serviceOffered/", serviceOfferedRouter);
 app.use("/api/provider/", providerRouter);
+app.use("/api/offer/", offerRouter);
+app.use("/api/order/", orderRouter);
 
 connectDB()
   .then(() => {

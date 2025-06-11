@@ -14,40 +14,49 @@ import Subcategory from "./pages/Subcategory";
 import DashboardProvider from "./pages/provider/DashboardProvider";
 import ServiceProviding from "./pages/provider/ServiceProviding";
 import Availability from "./pages/provider/Availability";
+import { ThemeProvider } from "./context/ThemeContext";
+import ProviderSelection from "./pages/ProviderSelection";
+import Order from "./pages/Order";
+import OfferAdmin from "./pages/admin/OfferaAdmin";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Toaster />
-        <Routes>
-          {/* normal pages */}
-          <Route path="/" element={<VisitorPage />}>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/subcategory/:id" element={<Subcategory />}></Route>
-          </Route>
+    <ThemeProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <Toaster />
+          <Routes>
+            {/* normal pages */}
+            <Route path="/" element={<VisitorPage />}>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/subcategory/:id" element={<Subcategory />} />
+              <Route path="/selectedProvider" element={<ProviderSelection />} />
+              <Route path="/orderDetails" element={<Order />} />
+            </Route>
 
-          {/* admin pages */}
-          <Route path="/admin">
-            <Route path="dashboard" element={<Dashboard />}>
-              <Route path="home" element={<DashboardHomePage />} />
-              <Route path="category" element={<CategoryAdmin />} />
-              <Route path="providers" element={<ProvidersAdmin />} />
+            {/* admin pages */}
+            <Route path="/admin">
+              <Route path="dashboard" element={<Dashboard />}>
+                <Route path="home" element={<DashboardHomePage />} />
+                <Route path="category" element={<CategoryAdmin />} />
+                <Route path="providers" element={<ProvidersAdmin />} />
+                <Route path="offers" element={<OfferAdmin />} />
+              </Route>
             </Route>
-          </Route>
-          <Route path="provider">
-            <Route path="dashboard" element={<DashboardProvider />}>
-              <Route path="home" element={<DashboardHomePage />} />
-              <Route path="services" element={<ServiceProviding />} />
-              <Route path="availability" element={<Availability />} />
+            <Route path="provider">
+              <Route path="dashboard" element={<DashboardProvider />}>
+                <Route path="home" element={<DashboardHomePage />} />
+                <Route path="services" element={<ServiceProviding />} />
+                <Route path="availability" element={<Availability />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 
