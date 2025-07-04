@@ -45,7 +45,7 @@ const ProviderSelection = () => {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto h-[90vh] px-4 py-4 dark:bg-[#050505] dark:text-white">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-2">
           <button
@@ -54,24 +54,24 @@ const ProviderSelection = () => {
           >
             ⬅ Back
           </button>
-          <h2 className="text-2xl font-bold text-center flex-1 mb-15">
+          <h2 className="text-2xl font-bold text-center flex-1 mb-15 select-none">
             Choose a Provider
           </h2>
           <div className="w-16"></div> {/* Spacer to balance the layout */}
         </div>
 
         {data.length === 0 ? (
-          <div className="text-center text-gray-500">
+          <div className="text-center text-gray-500 dark:bg-[#050505] dark:text-white">
             No providers available at this time slot.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 ">
             {data.map((item, index) => {
               const provider = item.providerId;
               console.log(service);
               return (
                 <div
-                  className="mx-auto bg-white rounded-3xl shadow-xl max-w-[270px] select-none"
+                  className="mx-auto bg-white dark:bg-[#414141] dark:text-white rounded-3xl shadow-xl hover:dark:shadow-accent-content max-w-[270px] select-none"
                   key={index}
                 >
                   <img
@@ -84,7 +84,7 @@ const ProviderSelection = () => {
                   />
                   <div className="group px-5 py-3 grid">
                     <div className="flex justify-between items-center">
-                      <span className="group-hover:text-cyan-700 font-bold md:text-2xl line-clamp-2">
+                      <span className="group-hover:text-cyan-700 group-hover:dark:text-cyan-300 font-bold md:text-2xl line-clamp-2">
                         {provider.firstName} {provider.lastName}
                       </span>
                       <span className="text-3xl flex gap-x-1 font-black items-center group-hover:text-yellow-600">

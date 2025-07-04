@@ -79,19 +79,21 @@ function ProvidersAdmin() {
 
   return (
     <div className="h-[80vh]">
-      <h1 className="my-3 font-bold text-gray-800">Approved Providers</h1>
+      <h1 className="my-3 font-bold text-gray-800 dark:text-white">
+        Approved Providers
+      </h1>
       {!approvedProviders ? (
         <span className="loading loading-spinner loading-xl">Loading...</span>
       ) : approvedProviders.length === 0 ? (
-        <div className="text-center text-lg font-semibold text-gray-500 ">
+        <div className="text-center text-lg font-semibold text-gray-500 dark:text-white">
           No Approved providers.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mb-5 px-3 py-4">
+        <div className="overflow-x-auto rounded-box border dark:bg-gray-800 border-base-content/5 bg-base-100 mb-5 px-3 py-4">
           <table className="table table-xs">
             {/* head */}
             <thead className=" ">
-              <tr className="">
+              <tr className="text-gray-600 dark:text-gray-400">
                 <th></th>
                 <th>Name</th>
                 <th>Gender</th>
@@ -155,7 +157,9 @@ function ProvidersAdmin() {
           </table>
         </div>
       )}
-      <h1 className="my-3 font-bold text-gray-800">Not Approved Providers</h1>
+      <h1 className="my-3 font-bold text-gray-800 dark:text-white">
+        Not Approved Providers
+      </h1>
       {!notApprovedProviders ? (
         <span className="loading loading-spinner loading-xl">Loading...</span>
       ) : notApprovedProviders.length === 0 ? (
@@ -163,11 +167,11 @@ function ProvidersAdmin() {
           No new providers to approve.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 mb-4 px-3 py-4">
+        <div className="overflow-x-auto rounded-box dark:bg-gray-800  border border-base-content/5 bg-base-100 mb-4 px-3 py-4">
           <table className="table table-xs">
             {/* head */}
             <thead className=" ">
-              <tr className="">
+              <tr className="text-gray-600 dark:text-gray-400">
                 <th></th>
                 <th>Name</th>
                 <th>Gender</th>
@@ -225,13 +229,13 @@ function ProvidersAdmin() {
         id="approval_modal"
         className="modal modal-bottom sm:modal-middle"
       >
-        <div className="modal-box">
+        <div className="modal-box dark:bg-gray-800">
           <p className="py-4">Do you want to approve this provider</p>
           <div className="modal-action">
             <form method="dialog">
               <button
                 type="button"
-                className="btn btn-success"
+                className="btn btn-success mr-3"
                 onClick={handleApprove}
               >
                 Yes

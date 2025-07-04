@@ -13,16 +13,8 @@ import { BASE_URL } from "../utils/constants";
 import toast from "react-hot-toast";
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const { isLoggedIn, setLoggedIn } = useAuth();
+  const { isLoggedIn, setLoggedIn, role } = useAuth();
   const navigate = useNavigate();
-
-  // const toggleTheme = () => {
-  //   const currentTheme = document.documentElement.getAttribute("class");
-
-  //   const newTheme = currentTheme === "dark" ? "light" : "dark";
-
-  //   document.documentElement.setAttribute("class", newTheme);
-  // };
 
   const handlelogout = async () => {
     try {
@@ -43,9 +35,17 @@ const Navbar = () => {
     }
   };
   return (
-    <div className=" dark:bg-black dark:text-white w-full h-20 border-b-1  border-gray-300  flex justify-between items-center px-10">
-      <Link to="/">
-        <div className="logo w-fit h-fit pl-2 font-extrabold  text-2xl ">
+    <div className=" dark:bg-[#050505] dark:text-white w-full h-20 border-b-1  border-gray-300  flex justify-between items-center px-10">
+      <Link
+        to={
+          role === "admin"
+            ? "/admin/dashboard/orders"
+            : role === "provider"
+            ? "/provider/dashboard/services"
+            : "/"
+        }
+      >
+        <div className="logo w-fit h-fit pl-2 font-extrabold text-2xl">
           Service<span className="font-extralight font-serif">Hub</span>
         </div>
       </Link>
@@ -59,7 +59,12 @@ const Navbar = () => {
           {" "}
           {isLoggedIn ? (
             <span>
-              <FaceIcon onClick={() => navigate("/profile")} className="mr-4" />
+              {role != "admin" && (
+                <FaceIcon
+                  onClick={() => navigate("/profile")}
+                  className="mr-4"
+                />
+              )}
               <LogoutIcon onClick={() => handlelogout()} />
             </span>
           ) : (

@@ -106,20 +106,20 @@ const Availability = () => {
   // }
 
   return (
-    <div className="w-[80vw] h-[80vh] mx-auto  p-6 overflow-auto bg-base-200 rounded-xl shadow-lg">
+    <div className="w-[80vw] h-[80vh] mx-auto  p-6 overflow-auto bg-base-200 rounded-xl shadow-lg dark:bg-gray-800 dark:text-white">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold text-neutral">
+        <h2 className="text-3xl font-bold text-neutral dark:text-white">
           🗓️ Weekly Availability
         </h2>
         <button
-          className="btn btn-outline btn-primary"
+          className="btn btn-outline btn-primary dark:bg-green-500 dark:text-white"
           onClick={() => setIsEditing(true)}
         >
           ✏️ Edit
         </button>
       </div>
       {!loading && isAvailabilityReady(availability) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ">
           {daysOfWeek.map((day) => (
             <div
               key={day}
@@ -153,14 +153,17 @@ const Availability = () => {
       {/* Modal */}
       {isEditing && (
         <dialog id="editModal" className="modal modal-open">
-          <div className="modal-box max-w-4xl w-full">
-            <h3 className="font-bold text-xl mb-4 text-center text-neutral">
+          <div className="modal-box max-w-4xl w-full dark:text-white dark:bg-gray-900">
+            <h3 className="font-bold text-xl mb-4 text-center text-neutral dark:text-white">
               Edit Availability
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
               {daysOfWeek.map((day) => (
-                <div key={day} className="bg-base-100 p-3 rounded-lg shadow">
-                  <h4 className="text-md font-bold mb-2 text-primary text-center">
+                <div
+                  key={day}
+                  className="bg-base-100 p-3 rounded-lg shadow dark:bg-gray-400"
+                >
+                  <h4 className="text-md font-bold mb-2 text-primary text-center dark:text-gray-950">
                     {day}
                   </h4>
                   <div className="flex flex-wrap justify-center gap-2">
@@ -188,7 +191,7 @@ const Availability = () => {
                 onClick={handleSave}
                 disabled={saving}
               >
-                {saving ? "Saving..." : "💾 Save"}
+                {saving ? "Saving..." : "Save"}
               </button>
               <button
                 className="btn btn-ghost border"

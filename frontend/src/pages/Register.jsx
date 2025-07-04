@@ -60,11 +60,9 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center w-full dark:bg-gray-950">
-      <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-4xl w-full mt-10">
-        <h1 className="text-2xl font-bold text-center mb-6 dark:text-gray-200">
-          Sign Up
-        </h1>
+    <div className="min-h-[90vh] flex items-center justify-center w-full dark:bg-[#050505] dark:text-white">
+      <div className="dark:bg-[#2e2e2e] dark:text-white shadow-md rounded-lg px-8 py-6 max-w-4xl w-full mt-10">
+        <h1 className="text-2xl font-bold text-center mb-6 ">Sign Up</h1>
 
         <form
           onSubmit={handleSubmit(onSubmit)}

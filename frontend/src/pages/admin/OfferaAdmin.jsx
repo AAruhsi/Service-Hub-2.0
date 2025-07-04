@@ -47,7 +47,9 @@ const OfferAdmin = () => {
     <div className="container mx-auto px-4 py-4 h-[80vh] overflow-y-auto">
       <div className="flex flex-col justify-between w-full gap-5">
         <div className="flex justify-between w-full items-center mr-2">
-          <h2 className="text-3xl font-semibold text-gray-800">Offers</h2>
+          <h2 className="text-3xl font-semibold text-gray-800 dark:text-white">
+            Offers
+          </h2>
           <div className="flex justify-end items-center space-y-2 flex-col mt-2">
             <button
               className="btn bg-amber-400 text-white hover:bg-amber-600"
@@ -339,13 +341,13 @@ export const AddOfferModal = forwardRef(({ refreshOffers }, ref) => {
 
           {/* subcatgeoryy */}
           <div>
-            <label className="block mb-1 text-sm font-medium text-gray-700">
+            <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white ">
               SubCategory
             </label>
 
             <div className="flex items-center gap-2">
               <select
-                className="w-full select select-bordered"
+                className="w-full select select-bordered dark:bg-gray-700 dark:text-white"
                 value={currentSubcategoryId}
                 onChange={(e) =>
                   setCurrentSubcategoryId(e.target.value.toString())
@@ -536,7 +538,7 @@ export const EditOfferModal = forwardRef(({ refreshOffers }, ref) => {
             </label>
             <input
               {...register("title", { required: "Title is required" })}
-              className="w-full input input-bordered"
+              className="w-full input input-bordered dark:bg-gray-700 dark:text-white"
               placeholder="Enter offer title"
             />
             {errors.title && (
@@ -555,7 +557,7 @@ export const EditOfferModal = forwardRef(({ refreshOffers }, ref) => {
               {...register("description", {
                 required: "Description is required",
               })}
-              className="w-full input input-bordered"
+              className="w-full input input-bordered dark:bg-gray-700 dark:text-white"
               placeholder="Enter offer description"
               rows="3"
             />
@@ -569,7 +571,7 @@ export const EditOfferModal = forwardRef(({ refreshOffers }, ref) => {
           {/* Discount and Coupon */}
           <div className="flex gap-3">
             <div className="w-full">
-              <label className="block mb-1 text-sm font-medium text-gray-700">
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
                 Discount Value (%)
               </label>
               <input
@@ -579,18 +581,18 @@ export const EditOfferModal = forwardRef(({ refreshOffers }, ref) => {
                   min: 0,
                   max: 100,
                 })}
-                className="w-full input input-bordered"
+                className="w-full input input-bordered dark:bg-gray-700 dark:text-white"
               />
             </div>
             <div className="w-full">
-              <label className="block mb-1 text-sm font-medium text-gray-700">
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
                 Coupon Code
               </label>
               <input
                 {...register("couponCode", {
                   required: "Coupon code is required",
                 })}
-                className="w-full input input-bordered"
+                className="w-full input input-bordered dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
@@ -598,17 +600,17 @@ export const EditOfferModal = forwardRef(({ refreshOffers }, ref) => {
           {/* Valid Dates */}
           <div className="flex gap-3">
             <div className="w-full">
-              <label className="block mb-1 text-sm font-medium text-gray-700">
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
                 Valid From
               </label>
               <input
                 type="date"
                 {...register("validFrom", { required: true })}
-                className="w-full input input-bordered"
+                className="w-full input input-bordered dark:bg-gray-700 dark:text-white"
               />
             </div>
             <div className="w-full">
-              <label className="block mb-1 text-sm font-medium text-gray-700">
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
                 Valid Till
               </label>
               <input
@@ -619,19 +621,19 @@ export const EditOfferModal = forwardRef(({ refreshOffers }, ref) => {
                     new Date(val) >= new Date(values.validFrom) ||
                     "Valid till must be after valid from",
                 })}
-                className="w-full input input-bordered"
+                className="w-full input input-bordered dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
 
           {/* Subcategories */}
           <div>
-            <label className="block mb-1 text-sm font-medium text-gray-700">
+            <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
               Subcategories
             </label>
             <div className="flex items-center gap-2">
               <select
-                className="w-full select select-bordered"
+                className="w-full select select-bordered dark:bg-gray-700 dark:text-white"
                 value={currentSubcategoryId}
                 onChange={(e) => setCurrentSubcategoryId(e.target.value)}
               >
@@ -701,7 +703,9 @@ export const EditOfferModal = forwardRef(({ refreshOffers }, ref) => {
               {...register("isActive")}
               className="checkbox checkbox-primary"
             />
-            <label className="text-sm font-medium text-gray-700">Active</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-white">
+              Active
+            </label>
           </div>
 
           {/* Buttons */}

@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -36,6 +37,8 @@ export const AuthProvider = ({ children }) => {
     setLoggedIn,
     user,
     setUser,
+    setRole,
+    role,
   };
   return (
     <AuthContext.Provider value={value}>

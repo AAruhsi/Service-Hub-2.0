@@ -126,8 +126,8 @@ const ServiceAdmin = ({ category }) => {
   const hasMore = page * PAGE_SIZE < filteredServices.length;
 
   return (
-    <div className="flex-2 overflow-x-auto rounded-box border border-base-content/5 bg-base-100 shadow-md p-4">
-      <div className="pb-2 opacity-60 tracking-wide flex justify-between items-center mb-2">
+    <div className="flex-2 overflow-x-auto rounded-box border border-base-content/5 bg-base-100 dark:bg-[#272727] shadow-md p-4">
+      <div className="pb-2 opacity-60 tracking-wide flex justify-between items-center mb-2 ">
         <h1 className="">Services</h1>
         <span
           className="text-white cursor-pointer bg-green-700 px-2 py-1 rounded-md"
@@ -152,7 +152,7 @@ const ServiceAdmin = ({ category }) => {
       ) : (
         <>
           <table className="table table-xs">
-            <thead className="text-center mb-5">
+            <thead className="text-center mb-5 dark:text-gray-300">
               <tr>
                 <th>#</th>
                 <th>Name</th>
@@ -163,7 +163,7 @@ const ServiceAdmin = ({ category }) => {
             </thead>
             <tbody className="text-center">
               {paginatedServices.map((service, index) => (
-                <tr key={service._id}>
+                <tr key={service._id} className="dark:border-b-white">
                   <td>
                     {" "}
                     <div>
@@ -240,25 +240,25 @@ const ServiceAdmin = ({ category }) => {
 
       {/* Add Service Modal */}
       <dialog id="my_modal_7" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+        <div className="modal-box dark:bg-[#272727]">
           <h3 className="font-bold text-lg mb-4">
             {modalMode === "add" ? "Add Service" : "Edit Service"}
           </h3>
 
-          <label className="floating-label my-3">
+          <label className="floating-label my-3 dark:text-[#474747]">
             <span>Service Name</span>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full dark:bg-[#474747] dark:text-white"
             />
           </label>
 
-          <label className="floating-label mt-5">
+          <label className="floating-label mt-5 dark:text-[#474747]">
             <span>Subcategory</span>
             <select
-              className="select select-bordered w-full"
+              className="select select-bordered w-full dark:bg-[#474747] dark:text-white"
               disabled={modalMode === "edit" && selectedSubcategory !== ""}
               value={selectedSubcategory}
               onChange={(e) => setSelectedSubcategory(e.target.value)}
@@ -275,22 +275,22 @@ const ServiceAdmin = ({ category }) => {
           </label>
 
           <div className="flex justify-between items-center gap-2">
-            <label className="floating-label my-3 w-full">
+            <label className="floating-label my-3 w-full dark:text-[#474747]">
               <span>Minimum Price</span>
               <input
                 type="number"
                 value={min}
                 onChange={(e) => setMin(e.target.value)}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:bg-[#474747] dark:text-white"
               />
             </label>
-            <label className="floating-label my-3 w-full">
+            <label className="floating-label my-3 w-full dark:text-[#474747]">
               <span>Maximum Price</span>
               <input
                 type="number"
                 value={max}
                 onChange={(e) => setMax(e.target.value)}
-                className="input input-bordered w-full"
+                className="input input-bordered w-full dark:bg-[#474747] dark:text-white"
               />
             </label>
           </div>
@@ -298,14 +298,14 @@ const ServiceAdmin = ({ category }) => {
           <input
             type="file"
             onChange={(e) => setFile(e.target.files[0])}
-            className="file-input file-input-bordered w-full"
+            className="file-input file-input-bordered w-full dark:bg-[#474747] dark:text-white"
           />
-          <label className="label my-4">
+          <label className="label my-4 ">
             Is Active
             <input
               type="checkbox"
               defaultChecked={active}
-              className="toggle toggle-success ml-4"
+              className="toggle toggle-success ml-4 dark:bg-[#474747] dark:text-white"
               onClick={() => {
                 const newValue = !active;
                 setActive(newValue);

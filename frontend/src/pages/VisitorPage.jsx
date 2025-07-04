@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { BASE_URL } from "../utils/constants";
+import Footer from "../components/Footer";
 const VisitorPage = () => {
   const { setUser, setLoggedIn, user } = useAuth();
   const fetchData = async () => {
@@ -25,9 +26,15 @@ const VisitorPage = () => {
 
   return (
     <>
-      <div>
+      <div className="flex flex-col min-h-screen w-screen overflow-x-hidden">
         <Navbar />
-        <Outlet />
+
+        {/* This makes the main content grow and push footer to bottom */}
+        <main className="flex-1">
+          <Outlet />
+        </main>
+
+        <Footer />
       </div>
     </>
   );

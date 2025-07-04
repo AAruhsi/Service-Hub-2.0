@@ -48,7 +48,6 @@ const CategoryAdmin = () => {
           toast.success(res.data.message);
         }
       } else if (modalMode === "edit" && selectedCategory) {
-        console.log(form);
         const res = await axios.patch(
           `${BASE_URL}/category/${selectedCategory._id}`,
           form,
@@ -57,7 +56,7 @@ const CategoryAdmin = () => {
             withCredentials: true,
           }
         );
-        console.log(res.data);
+
         // Replace the updated category in state
         setCategories((prev) =>
           prev.map((cat) =>
@@ -79,7 +78,7 @@ const CategoryAdmin = () => {
   const handleActive = async () => {
     try {
       if (!selectedCategory) return;
-      console.log(selectedCategory);
+
       const updatedStatus = !selectedCategory.isActive;
       const res = await axios.post(
         BASE_URL + "/toggle-category",
@@ -147,7 +146,9 @@ const CategoryAdmin = () => {
     return (
       <li
         className={`list-row border-b-1 border-gray-200 px-5 cursor-pointer ${
-          selectedCategory?._id === category._id ? "bg-gray-100" : ""
+          selectedCategory?._id === category._id
+            ? "bg-gray-100 dark:bg-[#2d2d2d] text-black dark:text-white"
+            : ""
         }`}
         style={style}
         key={category._id}
@@ -160,7 +161,9 @@ const CategoryAdmin = () => {
             alt="category"
           />
         </div>
-        <div className="mt-3 text-gray-900">{category.name}</div>
+        <div className="mt-3 text-gray-900 dark:text-white">
+          {category.name}
+        </div>
         <div className="flex justify-center items-center gap-5 mr-3">
           <span
             className="tooltip cursor-pointer "
@@ -204,18 +207,18 @@ const CategoryAdmin = () => {
 
   return (
     <>
-      <div className="flex pb-4 gap-10 my-3 w-full">
-        <div className="flex flex-col flex-[1.2]">
+      <div className="flex pb-4 gap-10 my-3 w-full  ">
+        <div className="flex flex-col flex-[1.2] ">
           <div>
             <ul
-              className="list bg-base-100 rounded-box shadow-md mb-10"
+              className="list bg-base-100 rounded-box shadow-sm  mb-10 dark:bg-[#1d1d1d]"
               onScroll={handleScroll}
               style={{ height: "250px", overflowY: "auto" }}
             >
               <li className="p-4 pb-2  opacity-60 tracking-wide flex justify-between items-center">
                 <h1 className="">Catgeories</h1>
                 <span
-                  className="text-white cursor-pointer bg-green-700 px-2 text-center py-1 rounded-md"
+                  className="text-white cursor-pointer bg-green-600  px-2 text-center py-1 rounded-md"
                   onClick={() => {
                     setModalMode("add");
                     setName("");
@@ -255,8 +258,8 @@ const CategoryAdmin = () => {
         </Suspense>
       </div>
 
-      <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+      <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle ">
+        <div className="modal-box dark:bg-[#1d1d1d]">
           <h3 className="font-bold text-lg mb-4">
             {modalMode === "add" ? "Add Category" : "Edit Category"}
           </h3>
@@ -266,20 +269,20 @@ const CategoryAdmin = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter name"
-            className="input input-bordered w-full"
+            className="input input-bordered w-full dark:bg-[#505050] mb-2"
           />
 
           <input
             type="file"
             onChange={(e) => setFile(e.target.files[0])}
-            className="file-input file-input-bordered w-full"
+            className="file-input file-input-bordered w-full dark:bg-[#505050]"
           />
 
           <div className="modal-action">
             <form method="dialog" className="flex gap-2">
               <button
                 type="button"
-                className="btn btn-success"
+                className="btn btn-success text-white"
                 onClick={handleSave}
               >
                 Save
@@ -294,13 +297,14 @@ const CategoryAdmin = () => {
         id="isActive_cat_modal"
         className="modal modal-bottom sm:modal-middle"
       >
-        <div className="modal-box">
+        <div className="modal-box dark:bg-[#1d1d1d]">
+          <h3 className="font-bold text-lg mb-4">Set Active Status</h3>
           <p className="py-4">Do you really want to perform this action</p>
           <div className="modal-action">
             <form method="dialog">
               <button
                 type="button"
-                className="btn btn-success"
+                className="btn btn-success mr-3"
                 onClick={handleActive}
               >
                 Yes

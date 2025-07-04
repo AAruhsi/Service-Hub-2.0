@@ -107,14 +107,15 @@ const Order = () => {
         withCredentials: true,
       });
       console.log(order);
-      navigate("/showOrders");
+      navigate("/profile");
       toast.success("Order Played ");
     } catch (error) {
+      toast.error("Something Wrong please try again ");
       console.log(error);
     }
   };
   return (
-    <div className="container mx-auto px-4 py-6 min-h-[80vh] overflow-y-auto">
+    <div className="container mx-auto px-4 py-6 min-h-[80vh] overflow-y-auto dark:bg-[#050505] dark:text-white">
       {/* Header Section */}
       <div className="flex items-center gap-4 mb-6 justify-between mx-4">
         <button

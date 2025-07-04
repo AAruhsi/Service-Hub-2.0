@@ -6,15 +6,15 @@ const Sidebar = ({ role = "admin" }) => {
 
   const menuItems = {
     admin: [
-      { label: "Dashboard", path: "/admin/dashboard/home" },
       { label: "Categories", path: "/admin/dashboard/category" },
       { label: "Providers", path: "/admin/dashboard/providers" },
+      { label: "Orders", path: "/admin/dashboard/orders" },
       { label: "Offers", path: "/admin/dashboard/offers" },
     ],
     provider: [
-      { label: "Dashboard", path: "/provider/dashboard/home" },
       { label: "My Services", path: "/provider/dashboard/services" },
       { label: "Appointments", path: "/provider/dashboard/availability" },
+      { label: "Orders", path: "/provider/dashboard/orders" },
     ],
   };
 

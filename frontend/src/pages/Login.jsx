@@ -12,7 +12,7 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const { setLoggedIn, setUser } = useAuth();
+  const { setLoggedIn, setUser, setRole } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -29,12 +29,15 @@ const Login = () => {
       if (res.status === 200) {
         setLoggedIn(true);
         setUser(res.data.data);
+
         toast.success(
           `${role.charAt(0).toUpperCase() + role.slice(1)} Login Successful`
         );
-
-        if (role === "admin") navigate("/admin/dashboard");
-        else if (role === "provider") navigate("/provider/dashboard");
+        if (role == "admin") setRole("admin");
+        else if (role == "provider") setRole("provider");
+        else setRole("user");
+        if (role === "admin") navigate("/admin/dashboard/category");
+        else if (role === "provider") navigate("/provider/dashboard/services");
         else navigate("/");
       }
     } catch (error) {
@@ -44,8 +47,8 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center w-full bg-white  dark:bg-gray-950">
-      <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
+    <div className="min-h-[90vh] flex items-center justify-center w-full   dark:bg-[#050505] dark:text-white">
+      <div className=" dark:bg-[#1b1b1c] dark:text-white shadow-md rounded-lg px-8 py-6 max-w-md">
         <h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">
           Welcome Back!
         </h1>
@@ -68,12 +71,12 @@ const Login = () => {
 
           {/* Role */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium  mb-1">
               Select User Type
             </label>
             <select
               {...register("role", { required: "Role is required" })}
-              className="w-full text-sm px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full text-sm px-3 py-2 dark:bg-[#1b1b1c] dark:text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">-- Select Role --</option>
               <option value="user">Customer</option>

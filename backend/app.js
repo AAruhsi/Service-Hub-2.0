@@ -9,6 +9,7 @@ const { serviceOfferedRouter } = require("./routes/servicesOfferedRouter");
 const { providerRouter } = require("./routes/providerRoute");
 const { offerRouter } = require("./routes/offerRouter");
 const { orderRouter } = require("./routes/orderRoutes");
+const { reviewRouter } = require("./routes/reviewRouter");
 
 require("./listener/categoryListener");
 
@@ -36,6 +37,7 @@ app.use("/api/serviceOffered/", serviceOfferedRouter);
 app.use("/api/provider/", providerRouter);
 app.use("/api/offer/", offerRouter);
 app.use("/api/order/", orderRouter);
+app.use("/api/review/", reviewRouter);
 
 connectDB()
   .then(() => {

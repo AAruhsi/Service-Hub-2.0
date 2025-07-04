@@ -18,8 +18,24 @@ orderRouter.post("/", async (req, res) => {
 orderRouter.get("/", async (req, res) => {
   try {
     const offers = await Order.find()
-      .populate("applicableSubcategoryIds", "name") // populate just the 'name' field
-      .exec();
+      .populate("provider")
+      .populate("service")
+      .populate("offer");
+
+    res.json(offers);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+orderRouter.get("/:providerId", async (req, res) => {
+  try {
+    const { providerId } = req.params;
+
+    const offers = await Order.find({ provider: providerId })
+      .populate("customer")
+      .populate("service");
+
     res.json(offers);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -38,4 +54,29 @@ orderRouter.get("/customer/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+orderRouter.patch("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findByIdAndUpdate(
+      id,
+      { orderStatus: "COMPLETED" },
+      { new: true }
+    );
+    res.json({ message: "Order Completed" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+orderRouter.patch("/isRated", async (req, res) => {
+  try {
+    const { isRated } = req.body;
+    const order = await Order.findByIdAndUpdate(id, { isRated }, { new: true });
+    res.json({ message: "Order Completed" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = { orderRouter };

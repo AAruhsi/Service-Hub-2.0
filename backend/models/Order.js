@@ -70,8 +70,9 @@ const orderSchema = new mongoose.Schema(
     },
 
     isRated: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      min: 1,
+      max: 5,
     },
   },
   { timestamps: true }

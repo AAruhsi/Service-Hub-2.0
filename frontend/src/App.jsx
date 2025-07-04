@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import ProfilePage from "./pages/Profile";
 import Dashboard from "./pages/admin/Dashboard";
-import DashboardHomePage from "./components/dashboard components/DashboardHomePage";
+
 import CategoryAdmin from "./pages/admin/CategoryAdmin";
 import ProvidersAdmin from "./pages/admin/ProvidersAdmin";
 import Subcategory from "./pages/Subcategory";
@@ -18,6 +18,8 @@ import { ThemeProvider } from "./context/ThemeContext";
 import ProviderSelection from "./pages/ProviderSelection";
 import Order from "./pages/Order";
 import OfferAdmin from "./pages/admin/OfferaAdmin";
+import ProviderOrders from "./pages/provider/ProviderOrders";
+import OrderAdmin from "./pages/admin/OrderAdmin";
 
 const App = () => {
   return (
@@ -40,17 +42,17 @@ const App = () => {
             {/* admin pages */}
             <Route path="/admin">
               <Route path="dashboard" element={<Dashboard />}>
-                <Route path="home" element={<DashboardHomePage />} />
                 <Route path="category" element={<CategoryAdmin />} />
                 <Route path="providers" element={<ProvidersAdmin />} />
                 <Route path="offers" element={<OfferAdmin />} />
+                <Route path="orders" element={<OrderAdmin />} />
               </Route>
             </Route>
             <Route path="provider">
               <Route path="dashboard" element={<DashboardProvider />}>
-                <Route path="home" element={<DashboardHomePage />} />
                 <Route path="services" element={<ServiceProviding />} />
                 <Route path="availability" element={<Availability />} />
+                <Route path="orders" element={<ProviderOrders />} />
               </Route>
             </Route>
           </Routes>

@@ -116,8 +116,8 @@ const SubcategoryAdmin = ({ category }) => {
 
   return (
     <div>
-      <ul className="list bg-base-100 rounded-box shadow-md">
-        <li className="p-4 pb-2  opacity-60 tracking-wide flex justify-between items-center">
+      <ul className="list bg-base-100 rounded-box shadow-md dark:bg-[#2d2d2d]">
+        <li className="p-4 pb-2  opacity-60 tracking-wide flex justify-between items-center ">
           <h1 className="">Subcatgeories</h1>
           <span
             className="text-white cursor-pointer bg-green-700 px-2 text-center py-1 rounded-md"
@@ -206,26 +206,26 @@ const SubcategoryAdmin = ({ category }) => {
       )}
 
       <dialog id="my_modal_6" className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+        <div className="modal-box dark:bg-[#1d1d1d]">
           <h3 className="font-bold text-lg mb-4">
             {modalMode === "add" ? "Add Category" : "Edit Category"}
           </h3>
-          <label className="floating-label my-3">
-            <span>Subcategory Name</span>
+          <label className="floating-label my-3 dark:text-[#505050] ">
+            <span className="dark:bg-[#ac6060]">Subcategory Name</span>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="input input-bordered w-full"
+              className="input input-bordered w-full dark:bg-[#505050] dark:text-white"
             />
           </label>
-          <label className="floating-label mt-5">
+          <label className="floating-label mt-5 dark:bg-[#505050] dark:text-[#505050]">
             <span>Category Name</span>
             <input
               type="text"
               value={category.name}
               disabled
-              className="input input-bordered w-full"
+              className="input input-bordered w-full dark:bg-[#505050]"
             />
           </label>
           <div className="modal-action">
@@ -249,14 +249,14 @@ const SubcategoryAdmin = ({ category }) => {
         id="isActive_modal"
         className="modal modal-bottom sm:modal-middle"
       >
-        <div className="modal-box">
+        <div className="modal-box dark:bg-[#313131]">
           <h3 className="font-bold text-lg">Hello!</h3>
           <p className="py-4">Do you really want to perform this action</p>
           <div className="modal-action">
             <form method="dialog">
               <button
                 type="button"
-                className="btn btn-success"
+                className="btn btn-success mr-3"
                 onClick={handleActive}
               >
                 Yes

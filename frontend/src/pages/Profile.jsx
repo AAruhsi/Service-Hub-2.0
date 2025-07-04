@@ -7,10 +7,13 @@ import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
 const ProfilePage = () => {
-  const { isLoggedIn, user, setUser } = useAuth();
+  const { isLoggedIn, user, setUser, role } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [reviewText, setReviewText] = useState("");
+  const [rating, setRating] = useState(5); // default rating
 
   const {
     register,
@@ -82,15 +85,51 @@ const ProfilePage = () => {
     document.getElementById("my_modal_5").close();
   };
 
+  const handleSubmitReview = async () => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/review`,
+        {
+          serviceId: selectedOrder?.service?._id,
+          orderId: selectedOrder?._id,
+          providerId: selectedOrder?.provider?._id,
+          userId: user?._id,
+          rating,
+          comment: reviewText,
+        },
+        { withCredentials: true }
+      );
+      await axios.patch(
+        BASE_URL + "/order/isRated",
+        { isRated: rating },
+        { withCredentials: true }
+      );
+      if (response) {
+        toast.success("Review submitted!");
+        setReviewText("");
+        setRating(5);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit review.");
+    } finally {
+      document.getElementById("review_modal").close();
+    }
+  };
+
+  const handleGoingBack = () => {
+    if (role == "provider") navigate("/provider/dashboard/services");
+    else navigate("/");
+  };
   return (
     <>
       {isLoggedIn && user && (
-        <div className="container mx-auto px-4 py-6 min-h-[80vh] overflow-y-auto bg-white dark:bg-gray-900 dark:text-gray-100">
+        <div className="container mx-auto px-4 py-6 min-h-[90vh] overflow-y-auto  dark:bg-[#050505] dark:text-white">
           {/* Header Section */}
           <div className="flex items-center gap-4 mb-6 justify-between mx-4">
             <button
               className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onClick={() => navigate("/")}
+              onClick={handleGoingBack}
               aria-label="Go back"
             >
               ← Back
@@ -108,9 +147,9 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          <div className="space-y-6 md:space-y-8">
+          <div className="space-y-6 md:space-y-8 flex justify-center items-center gap-10 mx-5">
             {/* User Information */}
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 flex-1">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                   User Information
@@ -155,7 +194,7 @@ const ProfilePage = () => {
             </div>
 
             {/* Orders Section */}
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 flex-1">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
                 My Orders
               </h2>
@@ -208,13 +247,37 @@ const ProfilePage = () => {
                         </p>
                         <p
                           className={`text-sm ${
-                            order.paymentStatus === "Completed"
+                            order.paymentStatus === "SUCCESS"
                               ? "text-green-600 dark:text-green-400"
                               : "text-yellow-600 dark:text-yellow-400"
                           }`}
                         >
-                          Status: {order.paymentStatus || "N/A"}
+                          Payment Status: {order.paymentStatus || "N/A"}
                         </p>
+                        <p
+                          className={`text-sm ${
+                            order.orderStatus === "COMPLETED"
+                              ? "text-green-600 dark:text-green-400"
+                              : "text-yellow-600 dark:text-yellow-400"
+                          }`}
+                        >
+                          Order Status: {order.orderStatus || "N/A"}
+                        </p>
+                        {order.orderStatus === "COMPLETED" && (
+                          <button
+                            onClick={() => {
+                              setSelectedOrder(order);
+                              setReviewText(""); // reset previous inputs
+                              setRating(5);
+                              document
+                                .getElementById("review_modal")
+                                .showModal();
+                            }}
+                            className="mt-2 px-3 py-1 bg-purple-600 text-white rounded-md hover:bg-purple-700 text-sm"
+                          >
+                            Give Review
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -336,6 +399,78 @@ const ProfilePage = () => {
                   </div>
                 </div>
               </form>
+            </div>
+          </dialog>
+
+          <dialog
+            id="review_modal"
+            className="modal modal-bottom sm:modal-middle"
+          >
+            <div className="modal-box w-full dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+              <div className="relative p-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Leave feedback</h2>
+                  <button
+                    className="absolute right-5 top-5 text-gray-400 hover:text-gray-600"
+                    onClick={() =>
+                      document.getElementById("review_modal").close()
+                    }
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <p className="mb-4 text-center text-sm">
+                  We'd love to hear what went well or how we can improve our
+                  services for you.
+                </p>
+
+                {/* Feedback Text */}
+                <textarea
+                  value={reviewText}
+                  onChange={(e) => setReviewText(e.target.value)}
+                  className="mb-3 w-full rounded-lg border border-gray-200 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows="4"
+                  placeholder="Your feedback..."
+                ></textarea>
+
+                {/* Star Rating */}
+                <div className="mb-4 flex justify-center gap-1 select-none">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      className={`text-2xl ${
+                        rating >= star ? "text-yellow-400" : "text-gray-300"
+                      } hover:text-yellow-500 transition-colors`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+
+                {/* Submit */}
+                <button
+                  onClick={handleSubmitReview}
+                  className="w-full rounded-lg bg-gray-900 py-2.5 text-sm font-medium text-white transition duration-300 hover:bg-gray-800"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
           </dialog>
         </div>

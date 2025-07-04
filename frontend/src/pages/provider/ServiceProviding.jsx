@@ -58,16 +58,16 @@ const ServiceProviding = () => {
 
   return (
     <div>
-      <div className="flex justify-between w-full items-center mr-20 p-4">
+      <div className="flex justify-between w-full items-center mr-20 p-4  dark:bg-[#050505] dark:text-white">
         <h1>Services</h1>
         <button className="btn bg-amber-400 text-white " onClick={openModal}>
           + Add Service
         </button>
       </div>
-      <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+      <div className="overflow-x-auto rounded-box border border-base-content/5 bg-gray-100 text-black dark:bg-gray-800 dark:text-white">
         <table className="table">
           <thead>
-            <tr>
+            <tr className="dark:text-gray-500">
               <th></th>
               <th>Name</th>
               <th>Subcategory</th>
@@ -259,7 +259,7 @@ export const AddServiceModal = forwardRef((props, ref) => {
   return (
     <>
       <dialog id="addServicesModal" className="modal">
-        <div className="modal-box w-full max-w-md p-6">
+        <div className="modal-box w-full max-w-md p-6 dark:bg-gray-800 dark:text-white">
           <h3 className="font-bold text-xl mb-6 text-center">
             Add New Service
           </h3>
@@ -267,11 +267,11 @@ export const AddServiceModal = forwardRef((props, ref) => {
           <div className="space-y-4">
             {/* Category */}
             <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
                 Category
               </label>
               <select
-                className="w-full select select-bordered"
+                className="w-full select select-bordered dark:bg-gray-700 dark:text-white"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
@@ -286,11 +286,11 @@ export const AddServiceModal = forwardRef((props, ref) => {
 
             {/* Subcategory */}
             <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">
+              <label className="block mb-1 text-sm font-medium text-gray-700  dark:text-white">
                 Subcategory
               </label>
               <select
-                className="w-full select select-bordered"
+                className="w-full select select-bordered dark:bg-gray-700 dark:text-white"
                 value={selectedSubcategory}
                 onChange={handleSubcategoryChange}
                 disabled={!selectedCategory}
@@ -306,11 +306,11 @@ export const AddServiceModal = forwardRef((props, ref) => {
 
             {/* Service */}
             <div>
-              <label className="block mb-1 text-sm font-medium text-gray-700">
+              <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
                 Service
               </label>
               <select
-                className="w-full select select-bordered"
+                className="w-full select select-bordered dark:bg-gray-700 dark:text-white"
                 value={selectedServiceObject?._id || ""}
                 onChange={(e) => {
                   const selected = services.find(
@@ -334,22 +334,22 @@ export const AddServiceModal = forwardRef((props, ref) => {
             {selectedServiceObject && (
               <>
                 <div>
-                  <label className="block mb-1 text-sm font-medium text-gray-700">
+                  <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
                     Price Range
                   </label>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:bg-gray-700 dark:text-white">
                     ₹{selectedServiceObject.min_price} – ₹
                     {selectedServiceObject.max_price}
                   </p>
                 </div>
 
                 <div>
-                  <label className="block mb-1 text-sm font-medium text-gray-700">
+                  <label className="block mb-1 text-sm font-medium text-gray-700  dark:text-white">
                     Actual Price
                   </label>
                   <input
                     type="number"
-                    className="w-full input input-bordered"
+                    className="w-full input input-bordered dark:bg-gray-700 dark:text-white"
                     placeholder="Enter actual price"
                     value={actualPrice}
                     onChange={(e) => setActualPrice(e.target.value)}
@@ -428,62 +428,62 @@ export const EditServiceModal = forwardRef(
     };
 
     return (
-      <dialog id="editServicesModal" className="modal">
-        <div className="modal-box w-full max-w-md p-6">
+      <dialog id="editServicesModal" className="modal ">
+        <div className="modal-box w-full max-w-md p-6 dark:bg-gray-800">
           <h3 className="font-bold text-xl mb-6 text-center">
             Edit Service Price
           </h3>
 
           <div className="space-y-4">
             <div>
-              <label className="block mb-1 text-sm text-gray-700">
+              <label className="block mb-1 text-sm text-gray-700 dark:text-white">
                 Service
               </label>
               <input
-                className="w-full input input-bordered bg-gray-100"
+                className="w-full input input-bordered bg-gray-100 dark:bg-gray-700 dark:text-white"
                 readOnly
                 value={service?.serviceId.name || ""}
               />
             </div>
 
             <div>
-              <label className="block mb-1 text-sm text-gray-700">
+              <label className="block mb-1 text-sm text-gray-700 dark:text-white">
                 Category
               </label>
               <input
-                className="w-full input input-bordered bg-gray-100"
+                className="w-full input input-bordered bg-gray-100 dark:bg-gray-700 dark:text-white"
                 readOnly
                 value={service?.serviceId.subcategoryId?.categoryId?.name || ""}
               />
             </div>
 
             <div>
-              <label className="block mb-1 text-sm text-gray-700">
+              <label className="block mb-1 text-sm text-gray-700 dark:text-white">
                 Subcategory
               </label>
               <input
-                className="w-full input input-bordered bg-gray-100"
+                className="w-full input input-bordered bg-gray-100 dark:bg-gray-700 dark:text-white"
                 readOnly
                 value={service?.serviceId.subcategoryId?.name || ""}
               />
             </div>
 
             <div>
-              <label className="block mb-1 text-sm text-gray-700">
+              <label className="block mb-1 text-sm text-gray-700 dark:text-white">
                 Price Range
               </label>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:bg-gray-700 dark:text-white">
                 ₹{minPrice} – ₹{maxPrice}
               </p>
             </div>
 
             <div>
-              <label className="block mb-1 text-sm text-gray-700">
+              <label className="block mb-1 text-sm text-gray-700 dark:text-white">
                 New Price
               </label>
               <input
                 type="number"
-                className="w-full input input-bordered"
+                className="w-full input input-bordered dark:bg-gray-700 dark:text-white"
                 placeholder="Enter new price"
                 value={actualPrice}
                 onChange={(e) => setActualPrice(e.target.value)}

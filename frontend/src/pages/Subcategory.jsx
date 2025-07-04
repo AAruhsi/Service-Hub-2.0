@@ -123,19 +123,22 @@ function Subcategory() {
   };
 
   return (
-    <div className="flex h-[88vh] bg-base-200">
+    <div className="flex h-[88vh] bg-base-200 text-base-content dark:bg-[#050505] dark:text-white">
       {/* Sidebar */}
-      <aside className="w-54 bg-base-100 py-6 border-r border-gray-300 pl-12">
-        <h2 className="text-lg text-gray-500 font-bold mb-4">Subcategories</h2>
-        <ul className="menu bg-base-100 rounded-box w-full mr-0 pr-0">
+      <aside className="w-56 bg-base-100 dark:bg-[#292929] dark:text-white  px-6 py-6">
+        <h2 className="text-md font-semibold text-gray-600 dark:text-gray-300 mb-4 uppercase tracking-wide">
+          Subcategories
+        </h2>
+        <ul className="space-y-2">
           {subcategories.map((sub) => (
-            <li key={sub._id} className="">
+            <li key={sub._id}>
               <button
-                className={`btn btn-ghost justify-start w-[100%] text-left mb-4 ${
-                  selectedSubcategory?._id === sub._id
-                    ? "bg-black shadow-2xl text-white scale-105"
-                    : ""
-                }`}
+                className={`w-full text-left px-3 py-2 rounded-md transition-all duration-150 dark:hover:bg-[#303030] dark:text-white
+              ${
+                selectedSubcategory?._id === sub._id
+                  ? "bg-primary text-white  font-semibold shadow-sm"
+                  : "hover:bg-base-200  dark:text-white text-base-content"
+              }`}
                 onClick={() => setSelectedSubcategory(sub)}
               >
                 {sub.name}
@@ -153,25 +156,30 @@ function Subcategory() {
         </h2>
 
         {services.length === 0 ? (
-          <div className="alert alert-warning shadow-lg w-fit">
+          <div className="alert alert-warning shadow-md w-fit text-sm">
             <span>No services available for this subcategory.</span>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {services.map((service, index) => (
-              <div key={index} className="card bg-base-100 shadow-md">
+              <div
+                key={index}
+                className="card bg-base-100 dark:bg-[#222222] dark:text-white shadow-sm"
+              >
                 <figure>
                   <img
                     src={service.photo}
                     alt={service.name}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-48 object-cover rounded-t-xl"
                   />
                 </figure>
-                <div className="card-body">
+                <div className="card-body p-4">
                   <div className="flex justify-between items-center">
-                    <h3 className="card-title">{service.name}</h3>
+                    <h3 className="card-title text-base font-medium">
+                      {service.name}
+                    </h3>
                     <button
-                      className="btn btn-primary btn-sm"
+                      className="btn btn-sm btn-primary"
                       onClick={() => openModal(service)}
                     >
                       Book
@@ -186,21 +194,22 @@ function Subcategory() {
 
       {/* Booking Modal */}
       <dialog id="bookingModal" className="modal">
-        <div className="modal-box">
+        <div className="modal-box bg-base-100 dark:bg-[#262626] dark:text-whitetext-base-content">
           <h3 className="font-bold text-lg mb-4">
             Book: {selectedService?.name}
           </h3>
 
           <div className="form-control mb-4">
-            <label className="label mr-3">Select Date</label>
+            <label className="label mb-2">Select Date</label>
             <input
               type="date"
-              className="input input-bordered"
+              className="input input-bordered w-full dark:bg-[#292929] dark:text-white"
               value={bookingDate}
               onChange={(e) => setBookingDate(e.target.value)}
             />
           </div>
-          <label className="mb-2 label">Select Time</label>
+
+          <label className="label mb-1">Select Time</label>
           <div className="grid grid-cols-3 gap-2">
             {Object.entries(bookingSlots).map(([period, times]) => (
               <div key={period}>
@@ -220,12 +229,12 @@ function Subcategory() {
             ))}
           </div>
 
-          <div className="modal-action w-[100%]  flex justify-center items-center">
-            <button className="btn btn-primary flex-1" onClick={handleBooking}>
+          <div className="modal-action flex justify-between items-center mt-6">
+            <button className="btn btn-primary w-1/2" onClick={handleBooking}>
               Confirm Booking
             </button>
             <button
-              className="btn flex-1 bg-red-500 text-white"
+              className="btn w-1/2 bg-red-500 text-white hover:bg-red-600"
               onClick={() => {
                 document.getElementById("bookingModal").close();
                 setSelectedService(null);
