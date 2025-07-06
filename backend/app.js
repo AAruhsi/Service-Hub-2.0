@@ -16,7 +16,7 @@ require("dotenv").config();
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://service-hub-2-0-frontend.onrender.com/",
     credentials: true,
   })
 );
